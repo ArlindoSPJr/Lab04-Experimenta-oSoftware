@@ -125,7 +125,7 @@ def test_style_cor_e_layout():
 - [ ] **Step 3: Rodar** `pytest tests/test_config.py -v`. Esperado: FAIL (`ModuleNotFoundError: lab04`). Commitar o teste: `#<issue> test: ...` (🔴, CONTRIBUTING §1).
 - [ ] **Step 4: Implementar** `lab04/config.py` com os valores das Global Constraints e `lab04/charts/style.py`. `requirements.txt`: `numpy`, `scipy>=1.11`, `pandas`, `plotly`, `streamlit>=1.28`, `pytest`. README: seções "Instalação" (`pip install -r requirements.txt`), "Rodar tudo" (`python -m lab04.run_all`), "Abrir dashboard" (`streamlit run dashboard/app.py`) e "Testes" (`pytest -q`).
 - [ ] **Step 5: Rodar** `pytest tests/test_config.py -v`. Esperado: PASS.
-- [ ] **Step 6: Commit** `#1 chore: estrutura do projeto, config e estilo` e fazer push **direto na `main`** (única exceção, porque o repositório está vazio; ver CONTRIBUTING §3). A partir daqui B e C podem criar suas branches.
+- [ ] **Step 6: Commit** `#1 chore: estrutura do projeto, config e estilo`, push da branch e PR com `Closes #1` (regra geral do CONTRIBUTING: todo commit referencia Issue e entra na `main` por PR). *Histórico: os primeiros commits foram feitos direto na `main` com o repositório vazio, e a #1 foi regularizada com o PR `issue-1-regra-pr`.* Depois do merge, B e C podem criar suas branches.
 
 ### Task 1.2: Os dois testes de hipótese
 
