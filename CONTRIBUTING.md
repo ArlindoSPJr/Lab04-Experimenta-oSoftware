@@ -4,6 +4,12 @@ Este documento é a **fonte única** das regras de trabalho com Git, GitHub e Gi
 
 > **Por que é rígido:** a correção é feita pelo GitHub Projects. **Commits sem o número da Issue não são considerados**, e há desconto de até 10% da nota da sprint por uso ruim do Projects (WIP não respeitado, Issues sem Assignee, cartões desatualizados, falta de evolução semanal).
 
+> ## ⚖️ Regra geral, sem exceção
+> 1. **Todo commit referencia uma Issue** (`#<N>` no início da mensagem).
+> 2. **Toda mudança entra na `main` por Pull Request** com `Closes #<N>`. Ninguém commita nem dá push direto na `main`, nem para documentação, dados ou correções pequenas.
+>
+> Se não existe Issue para a mudança, crie a Issue primeiro. Assim cada cartão do board fica com a evidência vinculada (commits e PR).
+
 ---
 
 ## 1. Desenvolvimento com TDD (obrigatório)
@@ -43,7 +49,7 @@ Regras:
 
 ## 3. Branches
 
-- **Nunca commitar direto na `main`.** A única exceção é o primeiro commit do repositório (Issue #1), porque o repositório está vazio.
+- **Nunca commitar direto na `main`** (regra geral, sem exceção). Os três primeiros commits do repositório (`dd626b2`, `1335b7d` e `5e2ea3d`, todos da #1) foram feitos direto na `main` porque o repositório estava vazio. A #1 foi regularizada depois com um PR.
 - **Uma branch por Issue**, criada a partir da `main` atualizada:
 
   ```bash

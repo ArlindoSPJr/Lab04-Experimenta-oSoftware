@@ -68,6 +68,6 @@ PUC Minas — Laboratório de Experimentação de Software, **Lab04 "Testes de H
 
 All rules for branches, commits, PRs, the Projects board and TDD are in `CONTRIBUTING.md`, which is the single source. Read it before committing. The critical points:
 
-- Commits start with `#<issue>` (`#2 test: ...`). Commits without the issue number are ignored by the grader.
+- **General rule, no exceptions:** every commit starts with `#<issue>` (`#2 test: ...`), and every change reaches `main` through a PR with `Closes #<issue>`. Never commit or push directly to `main`, not even docs. If no Issue exists for a change, create one first.
 - TDD is mandatory. The `test:` commit must come before the `feat:` commit on the branch.
 - Merge PRs with a merge commit, never with squash.
