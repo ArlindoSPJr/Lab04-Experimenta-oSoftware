@@ -33,8 +33,14 @@ class TestResult:
         return cls(**d)
 
 
+def _check_not_empty(a: np.ndarray, b: np.ndarray) -> None:
+    if not (a.size > 0 and b.size > 0):
+        raise ValueError(f"amostra vazia: n_a={a.size}, n_b={b.size}")
+
+
 def welch(a: np.ndarray, b: np.ndarray, alpha: float = ALPHA) -> TestResult:
     a, b = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
+    _check_not_empty(a, b)
     res = stats.ttest_ind(a, b, equal_var=False, alternative=ALTERNATIVE)
     d = (a.mean() - b.mean()) / np.sqrt((a.var(ddof=1) + b.var(ddof=1)) / 2)
     p = float(res.pvalue)
@@ -47,6 +53,7 @@ def welch(a: np.ndarray, b: np.ndarray, alpha: float = ALPHA) -> TestResult:
 
 def mann_whitney(a: np.ndarray, b: np.ndarray, alpha: float = ALPHA) -> TestResult:
     a, b = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
+    _check_not_empty(a, b)
     res = stats.mannwhitneyu(a, b, alternative=ALTERNATIVE, method="auto")
     u = float(res.statistic)  # U de `a`
     p = float(res.pvalue)
