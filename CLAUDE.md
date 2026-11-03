@@ -2,9 +2,25 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project status
+## Commands
 
-The repository currently contains only `Enunciado.pdf` (the assignment spec, in Portuguese). No code, test suite, or build tooling exists yet. When you add them, update this file with the actual commands (setup, single run command, how to launch the dashboard).
+```bash
+python -m venv .venv && .venv/Scripts/python -m pip install -r requirements.txt   # setup (Windows path)
+.venv/Scripts/python -m pytest -q                                                # all tests
+.venv/Scripts/python -m pytest tests/test_config.py::test_uma_cor_por_teste -v  # single test
+python -m lab04.run_all            # full pipeline, fixed seed, writes results/
+streamlit run dashboard/app.py     # dashboard (reads results/ only)
+```
+
+`pyproject.toml` sets `pythonpath = ["."]`, so tests import `lab04` from the repo root.
+
+## Where things are decided
+
+- `docs/superpowers/plans/2026-11-03-lab04-testes-hipotese.md`: the implementation plan, with exact interfaces, tests and the waves. Issues #1 to #16 map to its tasks.
+- `data/REGRAS_COLETA.md`: the only source for the real-data collection rules (R1–R12).
+- `lab04/config.py`: every constant (seed, α, effects, colors, groups, URLs). Never redefine these elsewhere.
+- **Chosen scenario:** P1 (Welch × Mann-Whitney), comparing time to merge of PRs from **novatos** (the author's first PR) vs the **core team** in `pallets/click`. The test is two-sided, with `a = novato` and `b = core`.
+- When importing `style.test_color` in tests, import the module (`from lab04.charts import style`). Otherwise pytest collects `test_color` as a test.
 
 ## What this project is
 
@@ -12,7 +28,7 @@ PUC Minas — Laboratório de Experimentação de Software, **Lab04 "Testes de H
 
 | Pair | Tests | Example scenario |
 |---|---|---|
-| P1 | Welch t × Mann-Whitney | PR time-to-merge with vs. without a review bot |
+| P1 | Welch t × Mann-Whitney | PR time-to-merge, novatos × core team (**chosen**) |
 | P2 | paired t × paired Wilcoxon | Build time before/after enabling cache |
 | P3 | ANOVA × Kruskal-Wallis | Review time for small/medium/large PRs |
 | P4 | Z for proportion × exact binomial | CI failure rate vs. a 5% target |
