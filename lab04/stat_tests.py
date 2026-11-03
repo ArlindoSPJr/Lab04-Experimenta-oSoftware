@@ -39,7 +39,13 @@ def _check_not_empty(a: np.ndarray, b: np.ndarray) -> None:
 
 
 def welch(a: np.ndarray, b: np.ndarray, alpha: float = ALPHA) -> TestResult:
-    a, b = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
+    """t de Welch bicaudal; efeito = d de Cohen com desvio médio (ddof=1).
+
+    Levanta ValueError se `a` ou `b` estiver vazio. NaN na entrada, ou variância
+    zero nos dois grupos, produz NaN em statistic, p_value e effect_size (e
+    reject=False); a função não trata esses casos.
+    """
+    a, b =np.asarray(a, dtype=float), np.asarray(b, dtype=float)
     _check_not_empty(a, b)
     res = stats.ttest_ind(a, b, equal_var=False, alternative=ALTERNATIVE)
     d = (a.mean() - b.mean()) / np.sqrt((a.var(ddof=1) + b.var(ddof=1)) / 2)
@@ -52,14 +58,20 @@ def welch(a: np.ndarray, b: np.ndarray, alpha: float = ALPHA) -> TestResult:
 
 
 def mann_whitney(a: np.ndarray, b: np.ndarray, alpha: float = ALPHA) -> TestResult:
-    a, b = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
+    """Mann-Whitney bicaudal; statistic = U de `a`, efeito = r rank-biserial.
+
+    Levanta ValueError se `a` ou `b` estiver vazio. NaN na entrada produz NaN em
+    statistic, p_value e effect_size (e reject=False); todos os valores iguais
+    (variância zero) produzem p_value NaN. A função não trata esses casos.
+    """
+    a, b =np.asarray(a, dtype=float), np.asarray(b, dtype=float)
     _check_not_empty(a, b)
     res = stats.mannwhitneyu(a, b, alternative=ALTERNATIVE, method="auto")
     u = float(res.statistic)  # U de `a`
     p = float(res.pvalue)
     return TestResult(
         name="mann_whitney", statistic=u, p_value=p, reject=bool(p < alpha),
-        effect_size=2 * u / (a.size * b.size) - 1, effect_label="r rank-biserial", df=None,
+        effect_size=float(2 * u / (a.size * b.size) - 1), effect_label="r rank-biserial", df=None,
         n_a=int(a.size), n_b=int(b.size),
     )
 
