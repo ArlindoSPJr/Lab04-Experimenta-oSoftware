@@ -54,3 +54,10 @@ def test_sinal_do_efeito():
 def test_mann_whitney_com_empates():
     r = mann_whitney(np.array([1., 1, 2, 2, 3]), np.array([2., 2, 3, 3, 4]))
     assert np.isfinite(r.p_value) and -1 <= r.effect_size <= 1
+
+@pytest.mark.parametrize("fn", [welch, mann_whitney])
+@pytest.mark.parametrize("a, b", [(np.array([]), np.array([1., 2, 3])),
+                                  (np.array([1., 2, 3]), np.array([]))])
+def test_recusa_amostra_vazia(fn, a, b):
+    with pytest.raises(ValueError):
+        fn(a, b)
