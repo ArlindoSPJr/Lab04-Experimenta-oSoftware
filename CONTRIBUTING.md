@@ -49,7 +49,7 @@ Regras:
 
 ## 3. Branches
 
-- **Nunca commitar direto na `main`** (regra geral, sem exceção). Os três primeiros commits do repositório (`dd626b2`, `1335b7d` e `5e2ea3d`, todos da #1) foram feitos direto na `main` porque o repositório estava vazio. A #1 foi regularizada depois com um PR.
+- **Nunca commitar direto na `main`** (regra geral, sem exceção). Os três primeiros commits do repositório (`a8d6e85`, `edc1aa6` e `2414ad4`, todos da #1) foram feitos direto na `main` porque o repositório estava vazio. A #1 foi regularizada depois com um PR.
 - **Uma branch por Issue**, criada a partir da `main` atualizada:
 
   ```bash
