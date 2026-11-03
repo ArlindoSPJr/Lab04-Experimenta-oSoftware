@@ -48,6 +48,17 @@ def test_outliers_positivos_e_finitos():
     assert (A > np.quantile(A, 0.5) * 10).mean() > 0.02
 
 
+@pytest.mark.parametrize(
+    "campo,valor",
+    [("outlier_mult", v) for v in (0.0, -1.0, float("inf"), float("nan"))]
+    + [("outlier_frac", v) for v in (-0.1, 1.1, float("nan"))],
+)
+def test_parametros_de_outlier_invalidos(campo, valor):
+    s = dataclasses.replace(S, **{"outlier_frac": 0.05, campo: valor})
+    with pytest.raises(ValueError):
+        generate_groups(np.random.default_rng(0), s, 0.2)
+
+
 @pytest.mark.parametrize("effect", [1.0, 1.5, -0.1, float("nan")])
 def test_efeito_invalido(effect):
     with pytest.raises(ValueError):
