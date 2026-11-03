@@ -15,6 +15,10 @@ def generate_groups(
     """
     if not (0 <= effect < 1):  # também recusa NaN
         raise ValueError(f"effect deve estar em [0, 1), recebido {effect!r}")
+    if not (0 <= scenario.outlier_frac <= 1):  # também recusa NaN
+        raise ValueError(f"outlier_frac deve estar em [0, 1], recebido {scenario.outlier_frac!r}")
+    if not (np.isfinite(scenario.outlier_mult) and scenario.outlier_mult > 0):
+        raise ValueError(f"outlier_mult deve ser finito e > 0, recebido {scenario.outlier_mult!r}")
     size = (n_reps, scenario.n)
     a = rng.lognormal(scenario.mu, scenario.sigma, size=size)
     b = rng.lognormal(scenario.mu + np.log(1 - effect), scenario.sigma, size=size)
