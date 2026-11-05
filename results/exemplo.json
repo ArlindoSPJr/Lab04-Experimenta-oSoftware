@@ -1,0 +1,25 @@
+{
+  "effect": 0.2,
+  "mann_whitney": {
+    "df": null,
+    "effect_label": "r rank-biserial",
+    "effect_size": 0.01333333333333342,
+    "n_a": 30,
+    "n_b": 30,
+    "name": "mann_whitney",
+    "p_value": 0.9351919702393391,
+    "reject": false,
+    "statistic": 456.0
+  },
+  "welch": {
+    "df": 30.02500039831016,
+    "effect_label": "d de Cohen",
+    "effect_size": -0.24980450751455818,
+    "n_a": 30,
+    "n_b": 30,
+    "name": "welch",
+    "p_value": 0.34102886184794085,
+    "reject": false,
+    "statistic": -0.9674886974114294
+  }
+}
