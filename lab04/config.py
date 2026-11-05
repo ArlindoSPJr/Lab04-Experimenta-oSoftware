@@ -24,6 +24,10 @@ COLORS: dict[str, str] = {"welch": "#1f77b4", "mann_whitney": "#ff7f0e"}
 # Convenção: a = novato, b = core
 GROUPS: tuple[str, ...] = ("novato", "core")
 
+# Cores de dados real × simulado no G1 (diferentes das cores dos testes)
+DATA_COLORS: dict[str, str] = {"real": "#2ca02c", "simulado": "#7f7f7f"}
+GROUP_LABELS: dict[str, str] = {"novato": "Novatos", "core": "Core team"}
+
 ROOT: Path = Path(__file__).resolve().parent.parent
 DATA_DIR: Path = ROOT / "data"
 RESULTS_DIR: Path = ROOT / "results"
