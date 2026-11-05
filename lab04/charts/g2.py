@@ -4,7 +4,7 @@ Um gráfico por teste, sempre na cor do teste:
 - Welch: densidade t de Student com gl = `r.df`;
 - Mann-Whitney: aproximação normal de U, média n_a·n_b/2 e desvio √(n_a·n_b·(n_a+n_b+1)/12).
 A região de rejeição (bicaudal, α/2 em cada cauda) é sombreada em tom claro e a área do
-p-valor (|estatística| ao menos tão extrema quanto a observada) é hachurada por cima.
+p-valor (|estatística| ao menos tão extrema quanto a observada) é sombreada em tom forte por cima.
 """
 import numpy as np
 import plotly.graph_objects as go
@@ -56,8 +56,7 @@ def _fig_g2(r: TestResult, alpha: float, x: np.ndarray, densidade: np.ndarray, c
     for i, cauda in enumerate((x <= centro - dist_obs, x >= centro + dist_obs)):
         fig.add_trace(_area(
             x, densidade, cauda, name="p-valor", legendgroup="pvalor", showlegend=i == 0,
-            line=dict(width=1, color=cor), fillcolor="rgba(0,0,0,0)",
-            fillpattern=dict(shape="/", fgcolor=cor, size=7, solidity=0.35),
+            line=dict(width=1, color=cor), fillcolor=_rgba(cor, 0.55),
         ))
 
     pico = float(densidade.max())
@@ -67,7 +66,7 @@ def _fig_g2(r: TestResult, alpha: float, x: np.ndarray, densidade: np.ndarray, c
         fig.add_vline(x=x_crit, line=dict(color=CINZA, dash="dash", width=1.5))
         fig.add_annotation(x=x_crit, y=topo, yanchor="top", xanchor="right" if lado < 0 else "left",
                            text=f"crítico {_num(x_crit, casas)}", showarrow=False, xshift=4 * lado,
-                           font=dict(size=11, color=CINZA))
+                           font=dict(size=11, color=CINZA), bgcolor="rgba(255,255,255,0.9)")
     fig.add_vline(x=r.statistic, line=dict(color=cor, width=2.5))
     fig.add_vline(x=2 * centro - r.statistic, line=dict(color=cor, width=1.5, dash="dot"))
     fig.add_annotation(
