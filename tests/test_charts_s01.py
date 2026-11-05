@@ -45,3 +45,12 @@ def test_g2_mostra_o_pvalor_com_4_casas():
     for r, fig_fn in ((welch(A, B), fig_g2_welch), (mann_whitney(A, B), fig_g2_mw)):
         texto = " ".join(a.text for a in fig_fn(r).layout.annotations)
         assert f"{r.p_value:.4f}".replace(".", ",") in texto
+
+
+def test_g2_area_do_pvalor_e_sombreada_sem_hachura():
+    for fig in (fig_g2_welch(welch(A, B)), fig_g2_mw(mann_whitney(A, B))):
+        areas = [t for t in fig.data if t.name == "p-valor"]
+        assert areas
+        for t in areas:
+            assert not t.fillpattern.shape
+            assert t.fillcolor.startswith("rgba(") and not t.fillcolor.endswith(",0)")
