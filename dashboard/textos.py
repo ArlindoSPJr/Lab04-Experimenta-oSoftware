@@ -50,7 +50,13 @@ TEXTOS: dict[str, str] = {
         "um resultado pelo menos tão extremo se H₀ fosse verdadeira."
     ),
     "exemplo": (
-        "Resultado dos dois testes num único dataset simulado com efeito 0,2: preenchido com os "
-        "números de `results/exemplo.json` depois de rodar `python -m lab04.run_all` (Issue #6)."
+        "No dataset simulado com efeito 0,2 (mediana do core 20% menor), nenhum dos dois testes "
+        "rejeitou H₀ a 5%: Welch com t = −0,97 (p = 0,34) e Mann-Whitney com U = 456 (p = 0,94). "
+        "O Welch saiu até com o sinal invertido (d = −0,25), porque um único PR simulado do core com "
+        "cerca de 22 mil horas puxou a média do core para 1.070 h, acima da dos novatos (347 h), "
+        "enquanto as medianas ficaram quase iguais (102 h × 104 h). Com σ = 2,73 e n = 30, um efeito "
+        "de 20% na mediana fica escondido pelo ruído, e a média fica refém dos outliers. Um único "
+        "dataset não decide qual teste é melhor: quem responde são as taxas de rejeição em 10.000 "
+        "repetições (Sprint 02)."
     ),
 }
