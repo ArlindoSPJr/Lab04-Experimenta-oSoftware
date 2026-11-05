@@ -103,18 +103,16 @@ O arquivo `data/real_prs.csv` (UTF-8, separador vírgula, uma linha por PR) tem 
 
 ## R12. Registro da coleta
 
-*Preencher ao rodar a coleta (Task 2.1, Step 4).*
-
 | Item | Valor |
 |---|---|
-| Data e hora da coleta (UTC) | |
+| Data e hora da coleta (UTC) | 2026-11-05 16:01 |
 | Comando | `python scripts/collect_prs.py` |
-| Commit do script | |
-| PRs no histórico (total baixado) | |
-| Elegíveis `novato` / `core` (antes da R8) | |
-| Período coberto pela amostra `novato` | |
-| Período coberto pela amostra `core` | |
-| Responsável | Integrante B |
+| Commit do script | `a76e408` |
+| PRs no histórico (total baixado) | 1.915 |
+| Elegíveis `novato` / `core` (antes da R8) | 356 / 122 |
+| Período coberto pela amostra `novato` | 2025-09-19 a 2026-08-24 (n = 30) |
+| Período coberto pela amostra `core` | 2026-07-17 a 2026-10-29 (n = 30) |
+| Responsável | Integrante B (ArthurAstolfi) |
 
 ---
 
