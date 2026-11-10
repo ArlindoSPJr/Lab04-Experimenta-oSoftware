@@ -5,9 +5,17 @@ from lab04.simulate import rejection_rates, run_grid
 S = base_scenario(np.log(10), 1.0)
 
 def test_erro_tipo_I_perto_de_5():
-    r = rejection_rates(np.random.default_rng(42), S, 0.0, n_reps=10_000)
+    # Lognormal com sigma=0.1 e quase normal: os dois testes precisam ficar em ~5%.
+    quase_normal = base_scenario(np.log(10), 0.1)
+    r = rejection_rates(np.random.default_rng(42), quase_normal, 0.0, n_reps=10_000)
     for t in ("welch", "mann_whitney"):
         assert 0.040 <= r[t] <= 0.060
+
+def test_assimetria_deixa_welch_conservador():
+    # Com sigma=1 o MW (livre de distribuicao) segue em ~5%; o Welch cai abaixo.
+    r = rejection_rates(np.random.default_rng(42), S, 0.0, n_reps=10_000)
+    assert 0.040 <= r["mann_whitney"] <= 0.060
+    assert r["welch"] < 0.045
 
 def test_poder_cresce_com_efeito():
     g = run_grid(np.random.default_rng(42), [S], effects=(0.0, 0.25, 0.5), n_reps=2000)
