@@ -11,11 +11,11 @@ import plotly.graph_objects as go
 from scipy import stats
 
 from lab04.charts.style import apply_layout, test_color
-from lab04.config import ALPHA, LABELS
+from lab04.config import ALPHA, CHART_COLORS, FONT_SIZE, LABELS
 from lab04.stat_tests import TestResult
 
 N_PONTOS = 801
-CINZA = "#555555"
+CINZA = CHART_COLORS["texto_secundario"]
 
 
 def _num(x: float, casas: int = 2) -> str:
@@ -66,15 +66,15 @@ def _fig_g2(r: TestResult, alpha: float, x: np.ndarray, densidade: np.ndarray, c
         fig.add_vline(x=x_crit, line=dict(color=CINZA, dash="dash", width=1.5))
         fig.add_annotation(x=x_crit, y=topo, yanchor="top", xanchor="right" if lado < 0 else "left",
                            text=f"crítico {_num(x_crit, casas)}", showarrow=False, xshift=4 * lado,
-                           font=dict(size=11, color=CINZA), bgcolor="rgba(255,255,255,0.9)")
+                           font=dict(size=FONT_SIZE - 2, color=CINZA), bgcolor=CHART_COLORS["fundo"])
     fig.add_vline(x=r.statistic, line=dict(color=cor, width=2.5))
     fig.add_vline(x=2 * centro - r.statistic, line=dict(color=cor, width=1.5, dash="dot"))
     fig.add_annotation(
         x=r.statistic, y=pico * 1.13, xanchor="right" if r.statistic >= centro else "left",
         xshift=-6 if r.statistic >= centro else 6,
-        showarrow=False, bgcolor="rgba(255,255,255,0.9)", bordercolor=cor, borderwidth=1, borderpad=4,
+        showarrow=False, bgcolor=CHART_COLORS["fundo"], bordercolor=cor, borderwidth=1, borderpad=4,
         text=f"{simbolo} = {_num(r.statistic, casas)} · <b>p-valor {_p(r.p_value)}</b>",
-        font=dict(size=12, color=cor),
+        font=dict(size=FONT_SIZE - 1, color=cor),
     )
 
     # Entradas de legenda para as linhas verticais (não desenham dados)
@@ -89,7 +89,7 @@ def _fig_g2(r: TestResult, alpha: float, x: np.ndarray, densidade: np.ndarray, c
     fig.update_xaxes(range=[float(x.min()), float(x.max())])
     fig.update_yaxes(range=[0, topo])
     fig.update_layout(separators=",.", legend=dict(orientation="h", y=-0.22, x=0.5, xanchor="center"),
-                      margin=dict(t=60, b=40))
+                      margin=dict(t=95, b=40))
     return fig
 
 

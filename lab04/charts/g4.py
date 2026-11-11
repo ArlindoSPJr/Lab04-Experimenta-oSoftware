@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from lab04.charts.style import apply_layout, test_color
-from lab04.config import ALPHA, LABELS, TEST_NAMES
+from lab04.config import ALPHA, CHART_COLORS, LABELS, TEST_NAMES
 
 X_TITULO = "Redução da mediana do tempo de merge (%)"
 Y_TITULO = "Poder (% de rejeições)"
@@ -41,7 +41,7 @@ def fig_g4(grid: pd.DataFrame) -> go.Figure:
             ), row=row, col=col)
         rotulo_alfa = dict(annotation_text=f"α = {ALPHA * 100:.0f}%",
                            annotation_position="bottom right") if i == 0 else {}
-        fig.add_hline(y=ALPHA * 100, line_dash="dot", line_color="#999999", row=row, col=col,
+        fig.add_hline(y=ALPHA * 100, line_dash="dot", line_color=CHART_COLORS["texto_secundario"], row=row, col=col,
                       **rotulo_alfa)
     apply_layout(fig, "G4 — Curvas de poder: rejeições × tamanho do efeito", X_TITULO, Y_TITULO)
     fig.update_xaxes(title_text=X_TITULO)

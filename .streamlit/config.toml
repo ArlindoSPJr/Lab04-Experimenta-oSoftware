@@ -1,0 +1,8 @@
+# Tema fixo: fundo branco em qualquer sistema (o dashboard é apresentado em projetor).
+# primaryColor = cor do t de Welch em lab04/config.py (COLORS["welch"]).
+[theme]
+base = "light"
+primaryColor = "#2a78d6"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F4F4F1"
+textColor = "#1F1F1F"

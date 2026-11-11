@@ -9,8 +9,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from lab04.charts.style import apply_layout
-from lab04.config import DATA_COLORS, GROUP_LABELS, GROUPS
+from lab04.charts.style import apply_layout, com_alpha
+from lab04.config import CHART_COLORS, DATA_COLORS, GROUP_LABELS, GROUPS
 
 X_TITLE = "Tempo até o merge (horas, escala log)"
 Y_TITLE = "PRs do grupo (%)"
@@ -44,10 +44,18 @@ def fig_g1(real: pd.DataFrame, simulated: pd.DataFrame) -> go.Figure:
         faixas = dict(start=inicio, end=fim, size=BIN_SIZE)
         for chave, rotulo in FONTES:
             cor = DATA_COLORS[chave]
+            # Real: barras cheias; simulado: contorno forte com preenchimento leve, para a
+            # sobreposição continuar legível (e não depender só da cor).
+            if chave == "real":
+                marcador = dict(color=cor, line=dict(color=CHART_COLORS["fundo"], width=1))
+                opacidade = 0.65
+            else:
+                marcador = dict(color=com_alpha(cor, 0.12), line=dict(color=cor, width=2.5))
+                opacidade = 1.0
             fig.add_trace(
                 go.Histogram(
                     x=np.log10(horas[g, chave]), name=rotulo, histnorm="percent", xbins=faixas,
-                    marker=dict(color=cor, line=dict(color="white", width=1)), opacity=0.6,
+                    marker=marcador, opacity=opacidade,
                     legendgroup=chave, showlegend=(col == 1),
                     hovertemplate=f"{rotulo}: %{{y:.1f}}% dos PRs<extra></extra>",
                 ),
@@ -58,7 +66,7 @@ def fig_g1(real: pd.DataFrame, simulated: pd.DataFrame) -> go.Figure:
 
     # Entrada de legenda para explicar as linhas tracejadas (não desenha dados)
     fig.add_trace(go.Scatter(x=[None], y=[None], mode="lines", name="Mediana (tracejado)",
-                             line=dict(color="#555555", dash="dash", width=2), hoverinfo="skip"))
+                             line=dict(color=CHART_COLORS["texto_secundario"], dash="dash", width=2), hoverinfo="skip"))
 
     apply_layout(fig, "G1 — Tempo até o merge: dados reais × simulados", X_TITLE, Y_TITLE)
     fig.update_annotations(yshift=12)
