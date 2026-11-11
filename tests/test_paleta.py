@@ -19,6 +19,7 @@ from tests.test_requisitos_graficos import GRAFICOS, IDS, _g2_mw, _g2_welch, _g3
 CHARTS_DIR = config.ROOT / "lab04" / "charts"
 BRANCO = {"#ffffff", "#fff", "white"}
 FONTE_MINIMA = 14  # px, rótulos de eixo legíveis em projetor
+LARGURA_MEIA = 650  # px, G2 em meia largura (duas colunas no dashboard)
 
 # Cor literal: hex, rgb()/rgba() com números, ou nome de cor do CSS entre aspas
 COR_LITERAL = re.compile(
@@ -98,3 +99,18 @@ def test_cada_teste_com_a_mesma_cor_em_g2_g3_g4():
                 cores[t.legendgroup] |= {c for c in (t.marker.color, t.line.color if hasattr(t, "line") else None) if c}
     for nome, vistas in cores.items():
         assert vistas == {style.test_color(nome)}, f"{nome}: cores {vistas}"
+
+
+@pytest.mark.parametrize("construtor", [_g2_welch, _g2_mw], ids=["G2-welch", "G2-mw"])
+def test_g2_cabe_em_meia_largura(construtor):
+    """No dashboard o G2 fica em meia largura (~650 px): o título do eixo y não pode
+    invadir o título do gráfico e a legenda não pode deixar uma linha com um item só."""
+    fig = construtor()
+    assert len(fig.layout.yaxis.title.text) <= 30, fig.layout.yaxis.title.text
+    itens = [t for t in fig.data if t.showlegend is not False and t.name]
+    legenda = fig.layout.legend
+    # Itens com largura fixa: em ~650 px cabem 2 por linha (3 linhas cheias com 6 itens)
+    assert legenda.entrywidthmode == "pixels" and legenda.entrywidth
+    por_linha = int(LARGURA_MEIA // (legenda.entrywidth + 60))
+    assert por_linha >= 2
+    assert len(itens) % por_linha == 0, f"{len(itens)} itens, {por_linha} por linha"
