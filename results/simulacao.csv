@@ -1,49 +1,97 @@
-scenario,scenario_label,n,effect,test,rejection_rate,ci_low,ci_high,n_reps
-base,"Base (lognormal ajustada, n=30)",30,0.000000,welch,0.012800,0.010597,0.015003,10000
-base,"Base (lognormal ajustada, n=30)",30,0.000000,mann_whitney,0.047400,0.043235,0.051565,10000
-base,"Base (lognormal ajustada, n=30)",30,0.100000,welch,0.012800,0.010597,0.015003,10000
-base,"Base (lognormal ajustada, n=30)",30,0.100000,mann_whitney,0.044500,0.040458,0.048542,10000
-base,"Base (lognormal ajustada, n=30)",30,0.200000,welch,0.013900,0.011605,0.016195,10000
-base,"Base (lognormal ajustada, n=30)",30,0.200000,mann_whitney,0.060300,0.055634,0.064966,10000
-base,"Base (lognormal ajustada, n=30)",30,0.300000,welch,0.017000,0.014466,0.019534,10000
-base,"Base (lognormal ajustada, n=30)",30,0.300000,mann_whitney,0.073100,0.067998,0.078202,10000
-base,"Base (lognormal ajustada, n=30)",30,0.400000,welch,0.018700,0.016045,0.021355,10000
-base,"Base (lognormal ajustada, n=30)",30,0.400000,mann_whitney,0.104800,0.098797,0.110803,10000
-base,"Base (lognormal ajustada, n=30)",30,0.500000,welch,0.024300,0.021282,0.027318,10000
-base,"Base (lognormal ajustada, n=30)",30,0.500000,mann_whitney,0.148300,0.141334,0.155266,10000
-n_pequeno,Amostra pequena (n=10),10,0.000000,welch,0.006700,0.005101,0.008299,10000
-n_pequeno,Amostra pequena (n=10),10,0.000000,mann_whitney,0.044200,0.040171,0.048229,10000
-n_pequeno,Amostra pequena (n=10),10,0.100000,welch,0.006200,0.004661,0.007739,10000
-n_pequeno,Amostra pequena (n=10),10,0.100000,mann_whitney,0.045600,0.041511,0.049689,10000
-n_pequeno,Amostra pequena (n=10),10,0.200000,welch,0.006300,0.004749,0.007851,10000
-n_pequeno,Amostra pequena (n=10),10,0.200000,mann_whitney,0.046200,0.042086,0.050314,10000
-n_pequeno,Amostra pequena (n=10),10,0.300000,welch,0.005700,0.004224,0.007176,10000
-n_pequeno,Amostra pequena (n=10),10,0.300000,mann_whitney,0.051400,0.047072,0.055728,10000
-n_pequeno,Amostra pequena (n=10),10,0.400000,welch,0.007600,0.005898,0.009302,10000
-n_pequeno,Amostra pequena (n=10),10,0.400000,mann_whitney,0.060600,0.055924,0.065276,10000
-n_pequeno,Amostra pequena (n=10),10,0.500000,welch,0.009000,0.007149,0.010851,10000
-n_pequeno,Amostra pequena (n=10),10,0.500000,mann_whitney,0.073300,0.068192,0.078408,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.000000,welch,0.010300,0.008321,0.012279,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.000000,mann_whitney,0.045900,0.041798,0.050002,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.100000,welch,0.009900,0.007960,0.011840,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.100000,mann_whitney,0.047800,0.043618,0.051982,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.200000,welch,0.009900,0.007960,0.011840,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.200000,mann_whitney,0.058100,0.053515,0.062685,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.300000,welch,0.013900,0.011605,0.016195,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.300000,mann_whitney,0.081100,0.075749,0.086451,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.400000,welch,0.017300,0.014744,0.019856,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.400000,mann_whitney,0.104600,0.098602,0.110598,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.500000,welch,0.023300,0.020343,0.026257,10000
-outliers,Outliers (5% dos PRs com tempo ×10),30,0.500000,mann_whitney,0.152500,0.145454,0.159546,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.000000,welch,0.005400,0.003964,0.006836,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.000000,mann_whitney,0.049200,0.044961,0.053439,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.100000,welch,0.004500,0.003188,0.005812,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.100000,mann_whitney,0.050000,0.045728,0.054272,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.200000,welch,0.003900,0.002678,0.005122,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.200000,mann_whitney,0.053200,0.048801,0.057599,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.300000,welch,0.006300,0.004749,0.007851,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.300000,mann_whitney,0.059900,0.055249,0.064551,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.400000,welch,0.005600,0.004137,0.007063,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.400000,mann_whitney,0.072800,0.067708,0.077892,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.500000,welch,0.007000,0.005366,0.008634,10000
-assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.500000,mann_whitney,0.094200,0.088475,0.099925,10000
+scenario,scenario_label,n,effect,alpha,test,rejection_rate,ci_low,ci_high,n_reps
+base,"Base (lognormal ajustada, n=30)",30,0.000000,0.050000,welch,0.012800,0.010597,0.015003,10000
+base,"Base (lognormal ajustada, n=30)",30,0.000000,0.050000,mann_whitney,0.047400,0.043235,0.051565,10000
+base,"Base (lognormal ajustada, n=30)",30,0.100000,0.050000,welch,0.012800,0.010597,0.015003,10000
+base,"Base (lognormal ajustada, n=30)",30,0.100000,0.050000,mann_whitney,0.044500,0.040458,0.048542,10000
+base,"Base (lognormal ajustada, n=30)",30,0.200000,0.050000,welch,0.013900,0.011605,0.016195,10000
+base,"Base (lognormal ajustada, n=30)",30,0.200000,0.050000,mann_whitney,0.060300,0.055634,0.064966,10000
+base,"Base (lognormal ajustada, n=30)",30,0.300000,0.050000,welch,0.017000,0.014466,0.019534,10000
+base,"Base (lognormal ajustada, n=30)",30,0.300000,0.050000,mann_whitney,0.073100,0.067998,0.078202,10000
+base,"Base (lognormal ajustada, n=30)",30,0.400000,0.050000,welch,0.018700,0.016045,0.021355,10000
+base,"Base (lognormal ajustada, n=30)",30,0.400000,0.050000,mann_whitney,0.104800,0.098797,0.110803,10000
+base,"Base (lognormal ajustada, n=30)",30,0.500000,0.050000,welch,0.024300,0.021282,0.027318,10000
+base,"Base (lognormal ajustada, n=30)",30,0.500000,0.050000,mann_whitney,0.148300,0.141334,0.155266,10000
+n_pequeno,Amostra pequena (n=10),10,0.000000,0.050000,welch,0.006700,0.005101,0.008299,10000
+n_pequeno,Amostra pequena (n=10),10,0.000000,0.050000,mann_whitney,0.044200,0.040171,0.048229,10000
+n_pequeno,Amostra pequena (n=10),10,0.100000,0.050000,welch,0.006200,0.004661,0.007739,10000
+n_pequeno,Amostra pequena (n=10),10,0.100000,0.050000,mann_whitney,0.045600,0.041511,0.049689,10000
+n_pequeno,Amostra pequena (n=10),10,0.200000,0.050000,welch,0.006300,0.004749,0.007851,10000
+n_pequeno,Amostra pequena (n=10),10,0.200000,0.050000,mann_whitney,0.046200,0.042086,0.050314,10000
+n_pequeno,Amostra pequena (n=10),10,0.300000,0.050000,welch,0.005700,0.004224,0.007176,10000
+n_pequeno,Amostra pequena (n=10),10,0.300000,0.050000,mann_whitney,0.051400,0.047072,0.055728,10000
+n_pequeno,Amostra pequena (n=10),10,0.400000,0.050000,welch,0.007600,0.005898,0.009302,10000
+n_pequeno,Amostra pequena (n=10),10,0.400000,0.050000,mann_whitney,0.060600,0.055924,0.065276,10000
+n_pequeno,Amostra pequena (n=10),10,0.500000,0.050000,welch,0.009000,0.007149,0.010851,10000
+n_pequeno,Amostra pequena (n=10),10,0.500000,0.050000,mann_whitney,0.073300,0.068192,0.078408,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.000000,0.050000,welch,0.010300,0.008321,0.012279,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.000000,0.050000,mann_whitney,0.045900,0.041798,0.050002,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.100000,0.050000,welch,0.009900,0.007960,0.011840,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.100000,0.050000,mann_whitney,0.047800,0.043618,0.051982,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.200000,0.050000,welch,0.009900,0.007960,0.011840,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.200000,0.050000,mann_whitney,0.058100,0.053515,0.062685,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.300000,0.050000,welch,0.013900,0.011605,0.016195,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.300000,0.050000,mann_whitney,0.081100,0.075749,0.086451,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.400000,0.050000,welch,0.017300,0.014744,0.019856,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.400000,0.050000,mann_whitney,0.104600,0.098602,0.110598,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.500000,0.050000,welch,0.023300,0.020343,0.026257,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.500000,0.050000,mann_whitney,0.152500,0.145454,0.159546,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.000000,0.050000,welch,0.005400,0.003964,0.006836,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.000000,0.050000,mann_whitney,0.049200,0.044961,0.053439,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.100000,0.050000,welch,0.004500,0.003188,0.005812,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.100000,0.050000,mann_whitney,0.050000,0.045728,0.054272,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.200000,0.050000,welch,0.003900,0.002678,0.005122,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.200000,0.050000,mann_whitney,0.053200,0.048801,0.057599,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.300000,0.050000,welch,0.006300,0.004749,0.007851,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.300000,0.050000,mann_whitney,0.059900,0.055249,0.064551,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.400000,0.050000,welch,0.005600,0.004137,0.007063,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.400000,0.050000,mann_whitney,0.072800,0.067708,0.077892,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.500000,0.050000,welch,0.007000,0.005366,0.008634,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.500000,0.050000,mann_whitney,0.094200,0.088475,0.099925,10000
+base,"Base (lognormal ajustada, n=30)",30,0.000000,0.010000,welch,0.000200,0.000000,0.000477,10000
+base,"Base (lognormal ajustada, n=30)",30,0.000000,0.010000,mann_whitney,0.007800,0.006076,0.009524,10000
+base,"Base (lognormal ajustada, n=30)",30,0.100000,0.010000,welch,0.000300,0.000000,0.000639,10000
+base,"Base (lognormal ajustada, n=30)",30,0.100000,0.010000,mann_whitney,0.007300,0.005631,0.008969,10000
+base,"Base (lognormal ajustada, n=30)",30,0.200000,0.010000,welch,0.000400,0.000008,0.000792,10000
+base,"Base (lognormal ajustada, n=30)",30,0.200000,0.010000,mann_whitney,0.012500,0.010322,0.014678,10000
+base,"Base (lognormal ajustada, n=30)",30,0.300000,0.010000,welch,0.000400,0.000008,0.000792,10000
+base,"Base (lognormal ajustada, n=30)",30,0.300000,0.010000,mann_whitney,0.018300,0.015673,0.020927,10000
+base,"Base (lognormal ajustada, n=30)",30,0.400000,0.010000,welch,0.001100,0.000450,0.001750,10000
+base,"Base (lognormal ajustada, n=30)",30,0.400000,0.010000,mann_whitney,0.028800,0.025522,0.032078,10000
+base,"Base (lognormal ajustada, n=30)",30,0.500000,0.010000,welch,0.001300,0.000594,0.002006,10000
+base,"Base (lognormal ajustada, n=30)",30,0.500000,0.010000,mann_whitney,0.047000,0.042852,0.051148,10000
+n_pequeno,Amostra pequena (n=10),10,0.000000,0.010000,welch,0.000400,0.000008,0.000792,10000
+n_pequeno,Amostra pequena (n=10),10,0.000000,0.010000,mann_whitney,0.008200,0.006432,0.009968,10000
+n_pequeno,Amostra pequena (n=10),10,0.100000,0.010000,welch,0.000100,0.000000,0.000296,10000
+n_pequeno,Amostra pequena (n=10),10,0.100000,0.010000,mann_whitney,0.007100,0.005454,0.008746,10000
+n_pequeno,Amostra pequena (n=10),10,0.200000,0.010000,welch,0.000300,0.000000,0.000639,10000
+n_pequeno,Amostra pequena (n=10),10,0.200000,0.010000,mann_whitney,0.008200,0.006432,0.009968,10000
+n_pequeno,Amostra pequena (n=10),10,0.300000,0.010000,welch,0.000000,0.000000,0.000000,10000
+n_pequeno,Amostra pequena (n=10),10,0.300000,0.010000,mann_whitney,0.009600,0.007689,0.011511,10000
+n_pequeno,Amostra pequena (n=10),10,0.400000,0.010000,welch,0.000100,0.000000,0.000296,10000
+n_pequeno,Amostra pequena (n=10),10,0.400000,0.010000,mann_whitney,0.010600,0.008593,0.012607,10000
+n_pequeno,Amostra pequena (n=10),10,0.500000,0.010000,welch,0.000000,0.000000,0.000000,10000
+n_pequeno,Amostra pequena (n=10),10,0.500000,0.010000,mann_whitney,0.014400,0.012065,0.016735,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.000000,0.010000,welch,0.000100,0.000000,0.000296,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.000000,0.010000,mann_whitney,0.008700,0.006880,0.010520,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.100000,0.010000,welch,0.000400,0.000008,0.000792,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.100000,0.010000,mann_whitney,0.009400,0.007509,0.011291,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.200000,0.010000,welch,0.000100,0.000000,0.000296,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.200000,0.010000,mann_whitney,0.011100,0.009047,0.013153,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.300000,0.010000,welch,0.000400,0.000008,0.000792,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.300000,0.010000,mann_whitney,0.020100,0.017349,0.022851,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.400000,0.010000,welch,0.000500,0.000062,0.000938,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.400000,0.010000,mann_whitney,0.026200,0.023069,0.029331,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.500000,0.010000,welch,0.001000,0.000381,0.001619,10000
+outliers,Outliers (5% dos PRs com tempo ×10),30,0.500000,0.010000,mann_whitney,0.047500,0.043331,0.051669,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.000000,0.010000,welch,0.000000,0.000000,0.000000,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.000000,0.010000,mann_whitney,0.008400,0.006611,0.010189,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.100000,0.010000,welch,0.000000,0.000000,0.000000,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.100000,0.010000,mann_whitney,0.010000,0.008050,0.011950,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.200000,0.010000,welch,0.000000,0.000000,0.000000,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.200000,0.010000,mann_whitney,0.010900,0.008865,0.012935,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.300000,0.010000,welch,0.000000,0.000000,0.000000,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.300000,0.010000,mann_whitney,0.010700,0.008683,0.012717,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.400000,0.010000,welch,0.000100,0.000000,0.000296,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.400000,0.010000,mann_whitney,0.016600,0.014096,0.019104,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.500000,0.010000,welch,0.000300,0.000000,0.000639,10000
+assimetria_forte,"Assimetria forte (σ × 1,5)",30,0.500000,0.010000,mann_whitney,0.024800,0.021752,0.027848,10000
