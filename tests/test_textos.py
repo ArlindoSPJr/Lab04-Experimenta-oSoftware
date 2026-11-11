@@ -37,3 +37,23 @@ def test_chaves_s02_presentes_e_nao_vazias():
 def test_textos_de_grafico_s02_tem_2_a_4_frases():
     for k in ("erro_tipo_1", "poder"):
         assert 2 <= _frases(TEXTOS[k]) <= 4, k
+
+
+CHAVES_FINAL = {"dados_reais", "conclusao_palpite", "conclusao_recomendacao", "conclusao_quando_muda"}
+
+
+def test_chaves_final_presentes_e_nao_vazias():
+    assert CHAVES_FINAL <= set(TEXTOS)
+    for k in CHAVES_FINAL:
+        assert TEXTOS[k].strip(), k
+
+
+def test_textos_final_tem_2_a_4_frases():
+    for k in CHAVES_FINAL:
+        assert 2 <= _frases(TEXTOS[k]) <= 4, k
+
+
+def test_recomendacao_cita_os_dois_testes():
+    texto = TEXTOS["conclusao_recomendacao"]
+    assert "Welch" in texto
+    assert "Mann-Whitney" in texto
