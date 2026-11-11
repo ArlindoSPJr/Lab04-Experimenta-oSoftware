@@ -7,6 +7,8 @@ from pathlib import Path
 # Reprodutibilidade e simulação (Enunciado: semente fixa, alfa 5%, 10.000 repetições)
 SEED: int = 42
 ALPHA: float = 0.05
+# Níveis de significância simulados (#48, pergunta 12); ALPHA continua o padrão
+ALPHAS: tuple[float, ...] = (ALPHA, 0.01)
 N_REPS: int = 10_000
 N_PER_GROUP: int = 30
 
