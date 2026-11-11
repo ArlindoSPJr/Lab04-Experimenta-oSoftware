@@ -35,3 +35,20 @@ def test_links_no_topo():
     at = _rodar()
     topo = " ".join(m.value for m in at.markdown[:3])
     assert REPO_URL in topo and PROJECT_URL in topo
+
+
+def test_s02_tem_graficos():
+    at = _rodar()
+    assert not at.exception
+    # G1, 2×G2, G3 e G4
+    assert len(at.get("plotly_chart")) >= 5
+    assert not any("Sprint 02" in i.value for i in at.info)
+    # tabela de status do erro tipo I (seção 4) e de vencedor de poder (seção 5)
+    assert len(at.dataframe) >= 4
+
+
+def test_s02_sem_simulacao_mostra_aviso_nas_secoes_4_e_5(tmp_path, monkeypatch):
+    monkeypatch.setenv("LAB04_RESULTS_DIR", str(tmp_path))
+    at = AppTest.from_file(APP, default_timeout=30).run()
+    assert not at.exception
+    assert len(at.get("plotly_chart")) == 0
