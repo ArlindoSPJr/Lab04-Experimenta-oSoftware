@@ -28,7 +28,7 @@ from lab04.stat_tests import TestResult  # noqa: E402
 RESULTS_DIR = Path(os.environ.get("LAB04_RESULTS_DIR", config.RESULTS_DIR))
 ARQUIVOS = ("params.json", "simulado_exemplo.csv", "exemplo.json")
 ARQUIVOS_S02 = ("simulacao.csv", "tipo1_status.csv", "poder_vencedor.csv")
-EM_CONSTRUCAO_FINAL = "Em construção — Entrega final"
+ARQUIVO_DADOS_REAIS = "dados_reais.csv"
 
 
 def _num(x: float, casas: int = 2) -> str:
@@ -94,6 +94,33 @@ def _tabela_poder(poder: pd.DataFrame, rotulos: dict) -> pd.DataFrame:
     })
 
 
+@st.cache_data
+def _resultados_reais(pasta: str) -> pd.DataFrame | None:
+    """Lê os testes aplicados aos dados reais; devolve None se o arquivo faltar."""
+    arquivo = Path(pasta) / ARQUIVO_DADOS_REAIS
+    return pd.read_csv(arquivo) if arquivo.exists() else None
+
+
+def _tabela_dados_reais(reais: pd.DataFrame) -> pd.DataFrame:
+    """Uma linha por teste, no formato brasileiro."""
+    def estatistica(r) -> str:
+        if r.teste == config.LABELS["welch"]:
+            return f"t = {_num(r.estatistica)}"
+        return f"U = {_num(r.estatistica, 0 if float(r.estatistica).is_integer() else 1)}"
+
+    return pd.DataFrame([
+        {
+            "Teste": r.teste,
+            "Estatística": estatistica(r),
+            "p-valor": _p(r.p_valor),
+            "Tamanho de efeito": f"{r.efeito_nome} = {_num(r.efeito)}",
+            f"Decisão (α = {_num(config.ALPHA)})": "rejeita H₀" if r.rejeita_h0 else "não rejeita H₀",
+            "Conclusão": r.conclusao,
+        }
+        for r in reais.itertuples()
+    ])
+
+
 def _sem_resultados() -> None:
     st.caption("Gráfico indisponível: faltam os arquivos de `results/`.")
 
@@ -101,8 +128,7 @@ def _sem_resultados() -> None:
 # ---------------------------------------------------------------- topo
 st.set_page_config(page_title="Lab04 — Welch × Mann-Whitney", page_icon="📊", layout="wide")
 
-dashboard_link = (f"[{config.DASHBOARD_URL}]({config.DASHBOARD_URL})" if config.DASHBOARD_URL
-                  else "*publicado na Sprint 02*")
+dashboard_link = f"[{config.DASHBOARD_URL}]({config.DASHBOARD_URL})"
 st.title("Testes de Hipótese por Dentro: t de Welch × Mann-Whitney")
 st.markdown(
     f"**Dashboard:** {dashboard_link}  \n"
@@ -227,11 +253,26 @@ else:
 st.markdown(TEXTOS["poder"])
 st.markdown(f"**Por que cada violação pesa mais para um teste.** {TEXTOS['violacoes']}")
 
-# ---------------------------------------------------------------- 6 e 7
+# ---------------------------------------------------------------- 6. Dados reais
 st.header("6. Dados reais")
-st.info(EM_CONSTRUCAO_FINAL)
+reais = _resultados_reais(str(RESULTS_DIR))
+if reais is None:
+    _sem_resultados()
+else:
+    st.markdown(f"**Os dois testes aplicados aos {len(real)} PRs reais** "
+                "(H₀ bilateral, novatos × core team)")
+    st.dataframe(_tabela_dados_reais(reais), width="stretch", hide_index=True)
+st.markdown(TEXTOS["dados_reais"])
+
+# ---------------------------------------------------------------- 7. Conclusão
 st.header("7. Conclusão")
-st.info(EM_CONSTRUCAO_FINAL)
+st.subheader("Palpite × resultado")
+st.markdown(TEXTOS["conclusao_palpite"])
+st.subheader("Recomendação")
+with st.container(border=True):
+    st.markdown(TEXTOS["conclusao_recomendacao"])
+st.subheader("Quando a recomendação muda")
+st.markdown(TEXTOS["conclusao_quando_muda"])
 
 st.divider()
 st.caption(f"Resultados reproduzíveis com `python -m lab04.run_all` (semente fixa {config.SEED}).")
