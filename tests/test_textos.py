@@ -57,3 +57,9 @@ def test_recomendacao_cita_os_dois_testes():
     texto = TEXTOS["conclusao_recomendacao"]
     assert "Welch" in texto
     assert "Mann-Whitney" in texto
+
+
+def test_texto_alfa_001_tem_2_a_4_frases_e_cita_os_dois_alfas():
+    texto = TEXTOS["alfa_001"]
+    assert 2 <= _frases(texto) <= 4
+    assert "0,01" in texto and "0,05" in texto

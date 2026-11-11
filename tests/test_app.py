@@ -1,3 +1,5 @@
+import json
+
 from streamlit.testing.v1 import AppTest
 
 from lab04.config import PROJECT_URL, REPO_URL, ROOT
@@ -100,3 +102,29 @@ def test_final_sem_results_secao_6_mostra_aviso(tmp_path, monkeypatch):
     at = AppTest.from_file(APP, default_timeout=30).run()
     assert not at.exception
     assert [h.value for h in at.header] == SECOES
+
+
+# --- #48: seletor de alfa nas seções 4 e 5 ---
+
+def _linhas_de_referencia(at):
+    ys = []
+    for c in at.get("plotly_chart"):
+        fig = json.loads(c.proto.spec)
+        if fig["layout"].get("title", {}).get("text", "").startswith(("G3", "G4")):
+            ys.append(sorted({round(s["y0"], 9) for s in fig["layout"].get("shapes", [])}))
+    return ys
+
+
+def test_seletor_de_alfa_muda_g3_g4_e_tabelas():
+    from dashboard.textos import TEXTOS
+    at = _rodar()
+    assert not at.exception
+    seletor = at.radio[0]
+    assert list(seletor.options) == ["0,05", "0,01"] and seletor.value == 0.05
+    assert _linhas_de_referencia(at) == [[5.0], [5.0]]
+    assert TEXTOS["alfa_001"] in " ".join(m.value for m in at.markdown)
+    tabelas_005 = [d.value.to_string() for d in at.dataframe]
+    at = seletor.set_value(0.01).run()
+    assert not at.exception
+    assert _linhas_de_referencia(at) == [[1.0], [1.0]]
+    assert [d.value.to_string() for d in at.dataframe] != tabelas_005
