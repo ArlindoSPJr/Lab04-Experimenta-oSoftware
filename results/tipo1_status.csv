@@ -1,0 +1,9 @@
+scenario,test,rejection_rate,status
+base,welch,0.012800,conservador
+base,mann_whitney,0.047400,ok
+n_pequeno,welch,0.006700,conservador
+n_pequeno,mann_whitney,0.044200,conservador
+outliers,welch,0.010300,conservador
+outliers,mann_whitney,0.045900,ok
+assimetria_forte,welch,0.005400,conservador
+assimetria_forte,mann_whitney,0.049200,ok
