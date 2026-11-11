@@ -23,3 +23,17 @@ def test_pergunta_tem_uma_frase():
 def test_textos_de_grafico_tem_2_a_4_frases():
     for k in ("dados", "como_funcionam"):
         assert 2 <= _frases(TEXTOS[k]) <= 4, k
+
+
+CHAVES_S02 = {"erro_tipo_1", "poder", "violacoes"}
+
+
+def test_chaves_s02_presentes_e_nao_vazias():
+    assert CHAVES_S02 <= set(TEXTOS)
+    for k in CHAVES_S02:
+        assert TEXTOS[k].strip(), k
+
+
+def test_textos_de_grafico_s02_tem_2_a_4_frases():
+    for k in ("erro_tipo_1", "poder"):
+        assert 2 <= _frases(TEXTOS[k]) <= 4, k
