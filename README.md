@@ -17,15 +17,27 @@ pip install -r requirements.txt
 
 ## Rodar tudo
 
-Um único comando, com semente fixa (42), gera todos os resultados em `results/`:
+Um único comando roda o pipeline de ponta a ponta, com semente fixa (`SEED = 42`, em `lab04/config.py`), e grava todos os resultados em `results/`:
 
 ```bash
 python -m lab04.run_all
 ```
 
+Leva cerca de 10 segundos (10.000 repetições por condição). Rodar de novo gera arquivos idênticos byte a byte.
+
+### O que fica em `results/`
+
+- `params.json`: parâmetros da lognormal ajustada aos tempos de merge reais (`mu`, `sigma`), o `n` por grupo e o arquivo de origem.
+- `simulado_exemplo.csv`: um dataset simulado de exemplo (30 PRs por grupo, efeito 0,2), usado no G1 e no G2.
+- `exemplo.json`: resultado do t de Welch e do Mann-Whitney aplicados ao dataset de exemplo.
+- `simulacao.csv`: taxa de rejeição dos dois testes em cada cenário (base, n pequeno, outliers, assimetria forte) e tamanho de efeito, base do G3 e do G4.
+- `tipo1_status.csv`: erro tipo I (efeito 0) de cada teste por cenário, com a classificação em relação aos 5%.
+- `poder_vencedor.csv`: para cada cenário e efeito > 0, o teste com mais poder.
+- `dados_reais.csv`: os dois testes aplicados aos PRs reais, com estatística, p-valor, tamanho de efeito e conclusão.
+
 ## Abrir o dashboard
 
-Publicado no Streamlit Community Cloud: https://lab04-experimentacao-software.streamlit.app/ (atualiza a cada push na `main`). Para abrir localmente:
+Publicado no Streamlit Community Cloud: https://lab04-experimentacao-software.streamlit.app/ (atualiza a cada push na `main`). Para abrir localmente (o dashboard só lê `results/`, então rode o `run_all` antes se a pasta estiver vazia):
 
 ```bash
 streamlit run dashboard/app.py
