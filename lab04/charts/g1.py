@@ -35,7 +35,7 @@ def fig_g1(real: pd.DataFrame, simulated: pd.DataFrame) -> go.Figure:
         for g in GROUPS
     ]
     fig = make_subplots(rows=1, cols=len(GROUPS), subplot_titles=titulos,
-                        shared_yaxes=True, horizontal_spacing=0.06)
+                        shared_yaxes=True, horizontal_spacing=0.10)
 
     for col, g in enumerate(GROUPS, start=1):
         logs = np.log10(np.concatenate([horas[g, k] for k, _ in FONTES]))
@@ -65,7 +65,8 @@ def fig_g1(real: pd.DataFrame, simulated: pd.DataFrame) -> go.Figure:
     fig.update_xaxes(title_text=X_TITLE, tickvals=np.log10(TICKS_HORAS),
                      ticktext=[_horas(t) for t in TICKS_HORAS])
     fig.update_yaxes(title_text=Y_TITLE, ticksuffix="%")
-    fig.update_yaxes(title_text=None, col=2)
+    # Cada subplot nomeia o próprio eixo y (enunciado: todos os eixos nomeados com unidade)
+    fig.update_yaxes(showticklabels=True, col=2)
     fig.update_layout(barmode="overlay", bargap=0, margin=dict(t=140),
                       legend=dict(orientation="h", y=-0.22, x=0.5, xanchor="center"))
     return fig
