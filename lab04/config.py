@@ -34,4 +34,4 @@ RESULTS_DIR: Path = ROOT / "results"
 
 REPO_URL: str = "https://github.com/ArlindoSPJr/Lab04-Experimenta-oSoftware"
 PROJECT_URL: str = "https://github.com/users/ArlindoSPJr/projects/6"
-DASHBOARD_URL: str = ""  # preenchido na publicação (Issue #16)
+DASHBOARD_URL: str = "https://lab04-experimentacao-software.streamlit.app/"

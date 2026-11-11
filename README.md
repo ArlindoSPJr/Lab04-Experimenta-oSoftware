@@ -3,7 +3,7 @@
 Comparação, por simulação de Monte Carlo, do **t de Welch** e do **Mann-Whitney** na pergunta: *o tempo até o merge de PRs de contribuidores novatos é diferente do de membros do core team?* Os dados reais são PRs do repositório [`pallets/click`](https://github.com/pallets/click).
 
 - GitHub Projects: https://github.com/users/ArlindoSPJr/projects/6
-- Dashboard: *(link publicado na Sprint 02)*
+- Dashboard: https://lab04-experimentacao-software.streamlit.app/
 
 ## Instalação
 
@@ -24,6 +24,8 @@ python -m lab04.run_all
 ```
 
 ## Abrir o dashboard
+
+Publicado no Streamlit Community Cloud: https://lab04-experimentacao-software.streamlit.app/ (atualiza a cada push na `main`). Para abrir localmente:
 
 ```bash
 streamlit run dashboard/app.py
