@@ -29,6 +29,13 @@ TEXTOS: dict[str, str] = {
         "grupo, também esperamos que o Welch fique abaixo dos 5% de erro tipo I (conservador) "
         "nos cenários mais assimétricos."
     ),
+    "bicaudal": (
+        "O teste é bicaudal porque, antes de ver os dados, não havia uma direção esperada para a "
+        "diferença: os PRs do core podiam demorar mais, por serem maiores e mexerem em partes "
+        "centrais do código, e os de novatos podiam demorar mais, por precisarem de mais rodadas de "
+        "revisão. Escolher a cauda depois de olhar os dados dobraria, na prática, a chance de erro "
+        "tipo I, então os 5% de α ficam divididos entre as duas caudas, com 2,5% em cada uma."
+    ),
     # Seção 2 — Os dados (G1)
     "dados": (
         "Os tempos até o merge são muito assimétricos à direita: nos novatos a média (664 h) é quase "
@@ -59,6 +66,15 @@ TEXTOS: dict[str, str] = {
         "dataset não decide qual teste é melhor: quem responde são as taxas de rejeição em 10.000 "
         "repetições (Sprint 02)."
     ),
+    "p_valor_nao_e": (
+        "O p-valor do exemplo (0,34 no Welch e 0,94 no Mann-Whitney) não é a probabilidade de H₀ "
+        "ser verdadeira: ele é calculado supondo H₀ verdadeira e diz só o quão raro seria um "
+        "resultado tão extremo nesse caso. Ele também não mede o tamanho do efeito, papel do d de "
+        "Cohen e do r rank-biserial, porque um efeito pequeno com amostra grande também dá p "
+        "minúsculo. E p alto não prova que não há diferença: no exemplo o efeito existia (mediana do "
+        "core 20% menor) e nenhum dos testes o detectou, o que é um erro tipo II, e não uma prova "
+        "de que os grupos são iguais."
+    ),
     # Seção 4 — Erro tipo I (G3); números de results/tipo1_status.csv
     "erro_tipo_1": (
         "Sem efeito (H₀ verdadeira), o Mann-Whitney ficou perto dos 5% em todos os cenários, entre "
@@ -69,6 +85,17 @@ TEXTOS: dict[str, str] = {
         "padrão da amostra e, com ele, o denominador do t, então o |t| raramente passa do valor "
         "crítico. Ser conservador parece seguro, mas tem um preço: o Welch quase nunca rejeita H₀, "
         "nem quando o efeito existe."
+    ),
+    # Números de results/tipo1_status.csv e results/simulacao.csv (base, efeito 0,5)
+    "erros_tipo": (
+        "Neste cenário, o erro tipo I é concluir que PRs de novatos e do core têm tempos de merge "
+        "diferentes quando não têm, o que custaria só um esforço de onboarding desnecessário, e o "
+        "erro tipo II é deixar de detectar uma demora real dos PRs de novatos. Para o grupo, o erro "
+        "tipo II é o mais grave: novatos que esperam demais pelo merge tendem a desistir de "
+        "contribuir, e o projeto perde gente nova sem perceber. E esse é justamente o ponto fraco do "
+        "t de Welch: conservador, ele errou pouco sem efeito (0,5% a 1,3%), mas com a mediana do "
+        "core 50% menor detectou a diferença em só 2,4% das repetições no cenário base, ou seja, "
+        "cometeu erro tipo II em 97,6% delas, contra 85,2% do Mann-Whitney (poder de 14,8%)."
     ),
     # Seção 5 — Poder (G4); números de results/simulacao.csv e results/poder_vencedor.csv
     "poder": (
@@ -142,5 +169,21 @@ TEXTOS: dict[str, str] = {
         "diferentes, como aqui, em que o core é bem menos disperso, o Mann-Whitney deixa de comparar "
         "só as medianas e passa a dizer se um grupo tende a ter valores maiores que o outro, e a "
         "conclusão deve ser lida nesse sentido."
+    ),
+    # Seção 7 — Limitações; as 6 de data/REGRAS_COLETA.md ("Limitações conhecidas")
+    "limitacoes": (
+        "- **Viés de sobrevivência (a principal):** só entram PRs mergeados, então os PRs de "
+        "novatos fechados sem merge, provavelmente os mais lentos ou problemáticos, ficam de fora, "
+        "e a demora real dos novatos tende a ser maior que a medida.\n"
+        "- **Associação atual:** o grupo do autor é o de hoje, então quem entrou no core "
+        "recentemente tem os PRs antigos contados como core.\n"
+        "- **Novato só neste repositório:** a pessoa pode ter experiência em outros projetos.\n"
+        "- **Janelas de tempo diferentes:** os novatos cobrem cerca de 11 meses e o core cerca de "
+        "3, e mudanças no projeto nesse período (releases, férias dos mantenedores) se misturam ao "
+        "efeito.\n"
+        "- **PRs em rascunho:** o tempo conta a partir da abertura do PR, mesmo que ele tenha "
+        "começado como draft, o que infla o tempo dos PRs que passaram por rascunho.\n"
+        "- **Core team pequeno:** poucas pessoas revisam os PRs, então a disponibilidade "
+        "individual delas pesa nos tempos."
     ),
 }
