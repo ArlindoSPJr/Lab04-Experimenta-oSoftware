@@ -158,6 +158,7 @@ with col_h0.container(border=True):
     st.markdown(TEXTOS["h0"])
 with col_h1.container(border=True):
     st.markdown(TEXTOS["h1"])
+st.markdown(f"**Por que bicaudal.** {TEXTOS['bicaudal']}")
 
 n_por_grupo = real["group"].value_counts()
 col_fonte, col_n = st.columns([3, 2])
@@ -231,6 +232,7 @@ else:
     ])
     st.dataframe(exemplo, width="stretch", hide_index=True)
 st.markdown(TEXTOS["exemplo"])
+st.markdown(f"**O que o p-valor não é.** {TEXTOS['p_valor_nao_e']}")
 
 # ---------------------------------------------------------------- 4. Erro tipo I
 s02 = _resultados_s02(str(RESULTS_DIR))
@@ -251,6 +253,8 @@ else:
     st.dataframe(_tabela_tipo1(_do_alfa(s02["tipo1"], alfa), rotulos), width="stretch",
                  hide_index=True)
 st.markdown(TEXTOS["erro_tipo_1"])
+with st.container(border=True):
+    st.markdown(f"⚖️ **Erro tipo I × erro tipo II neste cenário.** {TEXTOS['erros_tipo']}")
 
 # ---------------------------------------------------------------- 5. Poder
 st.header("5. Poder")
@@ -285,6 +289,8 @@ with st.container(border=True):
     st.markdown(TEXTOS["conclusao_recomendacao"])
 st.subheader("Quando a recomendação muda")
 st.markdown(TEXTOS["conclusao_quando_muda"])
+st.subheader("Limitações do estudo")
+st.markdown(TEXTOS["limitacoes"])
 
 st.divider()
 st.caption(f"Resultados reproduzíveis com `python -m lab04.run_all` (semente fixa {config.SEED}).")

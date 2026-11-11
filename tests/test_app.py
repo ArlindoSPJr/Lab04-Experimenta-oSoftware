@@ -128,3 +128,38 @@ def test_seletor_de_alfa_muda_g3_g4_e_tabelas():
     assert not at.exception
     assert _linhas_de_referencia(at) == [[1.0], [1.0]]
     assert [d.value.to_string() for d in at.dataframe] != tabelas_005
+
+def _por_secao(at):
+    """Junta o texto de cada seção (header) percorrendo a página na ordem, inclusive containers."""
+    def percorrer(no):
+        filhos = getattr(no, "children", None)
+        if filhos is None:
+            yield no
+            return
+        for filho in filhos.values():
+            yield from percorrer(filho)
+
+    secoes, atual = {}, None
+    for e in percorrer(at.main):
+        if e.type == "header":
+            atual = e.value
+            secoes[atual] = []
+        elif atual is not None and isinstance(getattr(e, "value", None), str):
+            secoes[atual].append(e.value)
+    return {k: " ".join(v) for k, v in secoes.items()}
+
+
+def test_final_respostas_p2_p7_p8_p15_na_secao_certa():
+    from dashboard.textos import TEXTOS
+    at = _rodar()
+    assert not at.exception
+    secoes = _por_secao(at)
+    esperado = {"bicaudal": "1. Cenário", "p_valor_nao_e": "3. Como os testes funcionam",
+                "erros_tipo": "4. Erro tipo I", "limitacoes": "7. Conclusão"}
+    for chave, secao in esperado.items():
+        assert TEXTOS[chave] in secoes[secao], chave
+
+
+def test_final_secao_7_tem_bloco_de_limitacoes():
+    at = _rodar()
+    assert "Limitações do estudo" in [s.value for s in at.subheader]
