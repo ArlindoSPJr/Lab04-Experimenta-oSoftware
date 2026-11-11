@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import pytest
 
-from lab04.config import EFFECTS, RESULTS_DIR
+from lab04.config import ALPHAS, EFFECTS, RESULTS_DIR, ROOT
 from lab04.real_data import fit_lognormal, load_real_data
 from lab04.run_all import main
 
@@ -44,11 +44,11 @@ def test_reprodutivel(tmp_path):
 def test_conteudo_s02(tmp_path):
     main(n_reps=200, out_dir=tmp_path)
     sim = pd.read_csv(tmp_path / "simulacao.csv")
-    assert len(sim) == 4 * len(EFFECTS) * 2                      # 48 linhas
+    assert len(sim) == len(ALPHAS) * 4 * len(EFFECTS) * 2        # 96 linhas
     assert list(sim["scenario"].unique()) == ["base", "n_pequeno", "outliers", "assimetria_forte"]
     assert (sim["n_reps"] == 200).all()
-    assert len(pd.read_csv(tmp_path / "tipo1_status.csv")) == 4 * 2              # efeito 0
-    assert len(pd.read_csv(tmp_path / "poder_vencedor.csv")) == 4 * (len(EFFECTS) - 1)
+    assert len(pd.read_csv(tmp_path / "tipo1_status.csv")) == len(ALPHAS) * 4 * 2   # efeito 0
+    assert len(pd.read_csv(tmp_path / "poder_vencedor.csv")) == len(ALPHAS) * 4 * (len(EFFECTS) - 1)
 
 
 def test_s02_nao_altera_a_s01(tmp_path):
@@ -65,3 +65,17 @@ def test_grava_dados_reais(tmp_path):
     assert len(tabela) == 2
     assert list(tabela.columns) == ["teste", "estatistica", "p_valor", "efeito_nome", "efeito",
                                     "rejeita_h0", "conclusao"]
+
+
+# #48: os números de alfa = 0,05 (citados nos textos do dashboard) não podem mudar.
+# tests/fixtures/alfa005/ guarda os CSVs da main antes do alfa = 0,01 (sem a coluna alpha).
+FIXTURES = ROOT / "tests" / "fixtures" / "alfa005"
+
+
+@pytest.mark.parametrize("arquivo", ARQUIVOS_S02)
+def test_results_alfa_005_identicos_aos_publicados(arquivo):
+    atual = pd.read_csv(RESULTS_DIR / arquivo, keep_default_na=False)
+    assert set(atual["alpha"]) == set(ALPHAS)
+    so_005 = atual[atual["alpha"] == 0.05].drop(columns="alpha").reset_index(drop=True)
+    antes = pd.read_csv(FIXTURES / arquivo, keep_default_na=False)
+    pd.testing.assert_frame_equal(so_005[list(antes.columns)], antes)

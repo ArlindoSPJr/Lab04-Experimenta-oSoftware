@@ -118,6 +118,17 @@ TEXTOS: dict[str, str] = {
         "segura os 5% porque compara só a ordem dos valores, embora também perca poder, já que os "
         "dois grupos passam a se sobrepor mais."
     ),
+    # Seções 4 e 5 — α = 0,01 (pergunta 12, #48); números de results/ com alpha = 0,01
+    "alfa_001": (
+        "Com α = 0,01 em vez de 0,05, a linha de referência do G3 desce para 1% e os dois testes "
+        "rejeitam menos: sem efeito, o Mann-Whitney fica entre 0,78% e 0,87%, um pouco abaixo de 1%, "
+        "e o Welch cai para 0% a 0,04%, ainda mais conservador. No G4 o poder despenca: com a mediana "
+        "do core 50% menor, no cenário base o Mann-Whitney rejeita H₀ em 4,7% das repetições (contra "
+        "14,8% com α = 0,05) e o Welch em 0,13% (contra 2,4%). O Mann-Whitney continua com mais poder "
+        "em todas as situações, mas a vantagem encolhe para no máximo 4,7 pontos percentuais, porque "
+        "os dois ficam perto de zero. Um α menor troca menos falsos positivos por ainda menos chance "
+        "de detectar um efeito real, e isso pesa mais para o Welch, que já era conservador."
+    ),
     # Seção 6 — Dados reais; números de tabela_dados_reais(load_real_data()) e describe_real
     "dados_reais": (
         "Nos 60 PRs reais os dois testes concordam e rejeitam H₀ a 5%: o t de Welch deu t = 3,07 "
