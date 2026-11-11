@@ -20,12 +20,14 @@ from dashboard.textos import TEXTOS  # noqa: E402
 from lab04 import config  # noqa: E402
 from lab04.charts.g1 import fig_g1  # noqa: E402
 from lab04.charts.g2 import fig_g2_mw, fig_g2_welch  # noqa: E402
+from lab04.charts.g3 import fig_g3  # noqa: E402
+from lab04.charts.g4 import fig_g4  # noqa: E402
 from lab04.real_data import describe_real, load_real_data  # noqa: E402
 from lab04.stat_tests import TestResult  # noqa: E402
 
 RESULTS_DIR = Path(os.environ.get("LAB04_RESULTS_DIR", config.RESULTS_DIR))
 ARQUIVOS = ("params.json", "simulado_exemplo.csv", "exemplo.json")
-EM_CONSTRUCAO_S02 = "Em construção — Sprint 02"
+ARQUIVOS_S02 = ("simulacao.csv", "tipo1_status.csv", "poder_vencedor.csv")
 EM_CONSTRUCAO_FINAL = "Em construção — Entrega final"
 
 
@@ -56,6 +58,40 @@ def _resultados(pasta: str) -> dict | None:
         "efeito": exemplo["effect"],
         "testes": {nome: TestResult.from_dict(exemplo[nome]) for nome in config.TEST_NAMES},
     }
+
+
+@st.cache_data
+def _resultados_s02(pasta: str) -> dict | None:
+    """Lê a grade de simulação e os resumos da S02; devolve None se faltar algum."""
+    pasta = Path(pasta)
+    if not all((pasta / f).exists() for f in ARQUIVOS_S02):
+        return None
+    return {
+        "grade": pd.read_csv(pasta / "simulacao.csv"),
+        "tipo1": pd.read_csv(pasta / "tipo1_status.csv"),
+        "poder": pd.read_csv(pasta / "poder_vencedor.csv"),
+    }
+
+
+def _tabela_tipo1(tipo1: pd.DataFrame, rotulos: dict) -> pd.DataFrame:
+    """Uma linha por situação, com a taxa e o status de cada teste."""
+    linhas = []
+    for cenario, g in tipo1.groupby("scenario", sort=False):
+        linha = {"Situação": rotulos.get(cenario, cenario)}
+        for r in g.itertuples():
+            linha[f"{config.LABELS[r.test]} (%)"] = _num(r.rejection_rate * 100)
+            linha[f"{config.LABELS[r.test]}: status"] = r.status
+        linhas.append(linha)
+    return pd.DataFrame(linhas)
+
+
+def _tabela_poder(poder: pd.DataFrame, rotulos: dict) -> pd.DataFrame:
+    return pd.DataFrame({
+        "Situação": poder["scenario"].map(lambda s: rotulos.get(s, s)),
+        "Redução da mediana": poder["effect"].map(lambda e: f"{e:.0%}"),
+        "Mais poder": poder["melhor"].map(lambda m: config.LABELS.get(m, m)),
+        "Vantagem (p.p.)": poder["diferenca"].map(lambda d: _num(abs(d))),
+    })
 
 
 def _sem_resultados() -> None:
@@ -165,11 +201,33 @@ else:
     st.dataframe(exemplo, width="stretch", hide_index=True)
 st.markdown(TEXTOS["exemplo"])
 
-# ---------------------------------------------------------------- 4 a 7
+# ---------------------------------------------------------------- 4. Erro tipo I
+s02 = _resultados_s02(str(RESULTS_DIR))
+rotulos = {} if s02 is None else dict(zip(s02["grade"]["scenario"], s02["grade"]["scenario_label"]))
+
 st.header("4. Erro tipo I")
-st.info(EM_CONSTRUCAO_S02)
+if s02 is None:
+    _sem_resultados()
+else:
+    st.plotly_chart(fig_g3(s02["grade"]), width="stretch", theme=None)
+    st.markdown(f"**Status do erro tipo I** (H₀ verdadeira, {config.N_REPS:,} repetições por "
+                f"situação; o status vem do IC de 95% da taxa)".replace(",", "."))
+    st.dataframe(_tabela_tipo1(s02["tipo1"], rotulos), width="stretch", hide_index=True)
+st.markdown(TEXTOS["erro_tipo_1"])
+
+# ---------------------------------------------------------------- 5. Poder
 st.header("5. Poder")
-st.info(EM_CONSTRUCAO_S02)
+if s02 is None:
+    _sem_resultados()
+else:
+    st.plotly_chart(fig_g4(s02["grade"]), width="stretch", theme=None)
+    st.markdown("**Teste com mais poder** em cada situação e tamanho de efeito "
+                "(vantagem = diferença nas taxas de rejeição)")
+    st.dataframe(_tabela_poder(s02["poder"], rotulos), width="stretch", hide_index=True)
+st.markdown(TEXTOS["poder"])
+st.markdown(f"**Por que cada violação pesa mais para um teste.** {TEXTOS['violacoes']}")
+
+# ---------------------------------------------------------------- 6 e 7
 st.header("6. Dados reais")
 st.info(EM_CONSTRUCAO_FINAL)
 st.header("7. Conclusão")
