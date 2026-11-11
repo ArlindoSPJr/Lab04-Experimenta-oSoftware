@@ -61,3 +61,42 @@ def test_dashboard_publicado_com_link_no_topo_e_no_readme():
     topo = " ".join(m.value for m in at.markdown[:3])
     assert DASHBOARD_URL in topo
     assert DASHBOARD_URL in (ROOT / "README.md").read_text(encoding="utf-8")
+
+
+def _textos_da_pagina(at):
+    elementos = list(at.info) + list(at.markdown) + list(at.caption) + list(at.warning)
+    return [e.value for e in elementos] + [h.value for h in at.subheader]
+
+
+def test_final_secoes_na_ordem_sem_em_construcao():
+    at = _rodar()
+    assert not at.exception
+    assert [h.value for h in at.header] == SECOES
+    assert not any("Em construção" in t for t in _textos_da_pagina(at))
+
+
+def test_final_secao_6_tem_tabela_dos_dados_reais():
+    at = _rodar()
+    tabelas = [d.value for d in at.dataframe
+               if {"t de Welch", "Mann-Whitney"} <= set(d.value.astype(str).values.ravel())]
+    assert len(tabelas) >= 1
+    tabela = tabelas[-1]
+    assert len(tabela) == 2
+    texto = " ".join(tabela.astype(str).values.ravel())
+    assert "t = 3,07" in texto and "U = 587" in texto and "d de Cohen = 0,79" in texto
+
+
+def test_final_secao_7_mostra_conclusao():
+    from dashboard.textos import TEXTOS
+    at = _rodar()
+    textos = " ".join(m.value for m in at.markdown)
+    for chave in ("dados_reais", "conclusao_palpite", "conclusao_recomendacao",
+                  "conclusao_quando_muda"):
+        assert TEXTOS[chave] in textos
+
+
+def test_final_sem_results_secao_6_mostra_aviso(tmp_path, monkeypatch):
+    monkeypatch.setenv("LAB04_RESULTS_DIR", str(tmp_path))
+    at = AppTest.from_file(APP, default_timeout=30).run()
+    assert not at.exception
+    assert [h.value for h in at.header] == SECOES
