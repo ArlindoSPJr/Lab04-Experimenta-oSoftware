@@ -55,3 +55,13 @@ def test_s02_nao_altera_a_s01(tmp_path):
     main(n_reps=200, out_dir=tmp_path)
     for f in ARQUIVOS_S01:
         assert (tmp_path / f).read_bytes() == (RESULTS_DIR / f).read_bytes()
+
+
+def test_grava_dados_reais(tmp_path):
+    main(n_reps=200, out_dir=tmp_path)
+    caminho = tmp_path / "dados_reais.csv"
+    assert caminho.exists()
+    tabela = pd.read_csv(caminho)
+    assert len(tabela) == 2
+    assert list(tabela.columns) == ["teste", "estatistica", "p_valor", "efeito_nome", "efeito",
+                                    "rejeita_h0", "conclusao"]
