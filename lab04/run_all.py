@@ -4,6 +4,7 @@ Etapa S01: parâmetros da lognormal ajustada aos dados reais, um dataset simulad
 e os dois testes aplicados a ele.
 Etapa S02: erro tipo I e poder dos dois testes nos quatro cenários (base + Q3), em
 `simulacao.csv`, com os resumos `tipo1_status.csv` e `poder_vencedor.csv`.
+Etapa Final: Welch e Mann-Whitney sobre os PRs reais, em `dados_reais.csv`.
 O único gerador aleatório é criado aqui, com `SEED`, e a S02 o usa logo depois da S01.
 """
 import json
@@ -15,6 +16,7 @@ import pandas as pd
 from lab04.config import DATA_DIR, GROUPS, N_REPS, RESULTS_DIR, ROOT, SEED
 from lab04.generate import generate_groups
 from lab04.real_data import fit_lognormal, load_real_data
+from lab04.real_tests import tabela_dados_reais
 from lab04.scenarios import all_scenarios, base_scenario
 from lab04.simulate import run_grid
 from lab04.stat_tests import mann_whitney, welch
@@ -64,6 +66,9 @@ def main(n_reps: int = N_REPS, out_dir: Path = RESULTS_DIR,
     _write_csv(out_dir / "simulacao.csv", grid)
     _write_csv(out_dir / "tipo1_status.csv", classify_type1(grid))
     _write_csv(out_dir / "poder_vencedor.csv", power_winner(grid))
+
+    # Final: os dois testes aplicados aos PRs reais (não usa o rng)
+    _write_csv(out_dir / "dados_reais.csv", tabela_dados_reais(df))
     print(f"Resultados gravados em {out_dir}")
 
 

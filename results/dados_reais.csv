@@ -1,0 +1,3 @@
+teste,estatistica,p_valor,efeito_nome,efeito,rejeita_h0,conclusao
+t de Welch,3.067118,0.004609,d de Cohen,0.791926,True,"rejeita H₀ a α = 0,05: novatos demoram mais"
+Mann-Whitney,587.000000,0.043584,r rank-biserial,0.304444,True,"rejeita H₀ a α = 0,05: novatos demoram mais"
