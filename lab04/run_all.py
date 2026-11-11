@@ -3,7 +3,8 @@
 Etapa S01: parâmetros da lognormal ajustada aos dados reais, um dataset simulado de exemplo
 e os dois testes aplicados a ele.
 Etapa S02: erro tipo I e poder dos dois testes nos quatro cenários (base + Q3), em
-`simulacao.csv`, com os resumos `tipo1_status.csv` e `poder_vencedor.csv`.
+`simulacao.csv`, com os resumos `tipo1_status.csv` e `poder_vencedor.csv`, para cada α
+em `ALPHAS` (os dois α contam os mesmos p-valores, sem novo sorteio).
 Etapa Final: Welch e Mann-Whitney sobre os PRs reais, em `dados_reais.csv`.
 O único gerador aleatório é criado aqui, com `SEED`, e a S02 o usa logo depois da S01.
 """

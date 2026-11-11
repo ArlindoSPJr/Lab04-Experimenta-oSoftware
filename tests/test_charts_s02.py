@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 from lab04.charts.g3 import fig_g3
 from lab04.charts.g4 import fig_g4
 from lab04.config import COLORS
@@ -39,3 +40,30 @@ def test_g4_um_subplot_por_cenario_e_eixos_com_unidade():
     assert "Poder (% de rejeições)" in f.layout.yaxis.title.text
     assert list(f.data[0].x) == [0.0, 20.0]
     assert f.layout.title.text
+
+
+# --- #48: G3 e G4 filtram pelo alfa e põem a linha de referência em alfa ---
+
+G2 = pd.concat([G.assign(alpha=0.05),
+                G.assign(alpha=0.01, rejection_rate=G.rejection_rate / 5,
+                         ci_low=G.ci_low / 5, ci_high=G.ci_high / 5)], ignore_index=True)
+
+
+def _linhas_y(f):
+    return sorted({round(s.y0, 9) for s in f.layout.shapes})
+
+
+def test_g3_filtra_pelo_alfa_e_muda_a_linha():
+    f5, f1 = fig_g3(G2, alpha=0.05), fig_g3(G2, alpha=0.01)
+    assert len(f5.data) == len(f1.data) == 2
+    assert list(f5.data[0].y) == pytest.approx([5.0, 5.0]) and list(f1.data[0].y) == pytest.approx([1.0, 1.0])
+    assert _linhas_y(f5) == [5.0] and _linhas_y(f1) == [1.0]
+    assert any("α = 1%" in a.text for a in f1.layout.annotations)
+
+
+def test_g4_filtra_pelo_alfa_e_muda_a_linha():
+    f5, f1 = fig_g4(G2, alpha=0.05), fig_g4(G2, alpha=0.01)
+    assert len(f5.data) == len(f1.data) == 4
+    assert list(f5.data[0].y) == pytest.approx([5.0, 25.0]) and list(f1.data[0].y) == pytest.approx([1.0, 5.0])
+    assert _linhas_y(f5) == [5.0] and _linhas_y(f1) == [1.0]
+    assert any("α = 1%" in a.text for a in f1.layout.annotations)

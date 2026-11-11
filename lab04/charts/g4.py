@@ -2,9 +2,12 @@
 
 Um subplot por cenário, uma linha por teste na cor do teste. A legenda aparece só uma
 vez por teste (`legendgroup` liga as linhas do mesmo teste em todos os subplots).
+Se a grade tem a coluna `alpha` (#48), usa só as linhas do α escolhido, e a linha de
+referência fica em α.
 """
 import math
 
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -16,7 +19,9 @@ X_TITULO = "Redução da mediana do tempo de merge (%)"
 Y_TITULO = "Poder (% de rejeições)"
 
 
-def fig_g4(grid: pd.DataFrame) -> go.Figure:
+def fig_g4(grid: pd.DataFrame, alpha: float = ALPHA) -> go.Figure:
+    if "alpha" in grid:
+        grid = grid[np.isclose(grid["alpha"], alpha)]
     cenarios = list(dict.fromkeys(grid["scenario"]))
     rotulos = [grid.loc[grid["scenario"] == s, "scenario_label"].iloc[0] for s in cenarios]
     ncols = min(2, len(cenarios))
@@ -39,9 +44,11 @@ def fig_g4(grid: pd.DataFrame) -> go.Figure:
                 marker=dict(color=test_color(nome)),
                 hovertemplate="Efeito %{x:.0f}%<br>" + LABELS[nome] + ": %{y:.1f}%<extra></extra>",
             ), row=row, col=col)
-        rotulo_alfa = dict(annotation_text=f"α = {ALPHA * 100:.0f}%",
-                           annotation_position="bottom right") if i == 0 else {}
-        fig.add_hline(y=ALPHA * 100, line_dash="dot", line_color=CHART_COLORS["texto_secundario"], row=row, col=col,
+        rotulo_alfa = dict(annotation_text=f"α = {alpha * 100:g}%",
+                           annotation_position="bottom right",
+                           annotation_font_color=CHART_COLORS["texto_secundario"]) if i == 0 else {}
+        fig.add_hline(y=alpha * 100, line_dash="dot", line_color=CHART_COLORS["texto_secundario"],
+                      row=row, col=col,
                       **rotulo_alfa)
     apply_layout(fig, "G4 — Curvas de poder: rejeições × tamanho do efeito", X_TITULO, Y_TITULO)
     fig.update_xaxes(title_text=X_TITULO)

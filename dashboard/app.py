@@ -73,6 +73,11 @@ def _resultados_s02(pasta: str) -> dict | None:
     }
 
 
+def _do_alfa(df: pd.DataFrame, alfa: float) -> pd.DataFrame:
+    """Linhas do α escolhido (#48); resultados sem a coluna `alpha` valem para qualquer α."""
+    return df[(df["alpha"] - alfa).abs() < 1e-9] if "alpha" in df else df
+
+
 def _tabela_tipo1(tipo1: pd.DataFrame, rotulos: dict) -> pd.DataFrame:
     """Uma linha por situação, com a taxa e o status de cada teste."""
     linhas = []
@@ -153,6 +158,7 @@ with col_h0.container(border=True):
     st.markdown(TEXTOS["h0"])
 with col_h1.container(border=True):
     st.markdown(TEXTOS["h1"])
+st.markdown(f"**Por que bicaudal.** {TEXTOS['bicaudal']}")
 
 n_por_grupo = real["group"].value_counts()
 col_fonte, col_n = st.columns([3, 2])
@@ -226,30 +232,40 @@ else:
     ])
     st.dataframe(exemplo, width="stretch", hide_index=True)
 st.markdown(TEXTOS["exemplo"])
+st.markdown(f"**O que o p-valor não é.** {TEXTOS['p_valor_nao_e']}")
 
 # ---------------------------------------------------------------- 4. Erro tipo I
 s02 = _resultados_s02(str(RESULTS_DIR))
 rotulos = {} if s02 is None else dict(zip(s02["grade"]["scenario"], s02["grade"]["scenario_label"]))
 
 st.header("4. Erro tipo I")
+alfa = config.ALPHA
 if s02 is None:
     _sem_resultados()
 else:
-    st.plotly_chart(fig_g3(s02["grade"]), width="stretch", theme=None)
+    # #48: o α escolhido vale para as seções 4 e 5 (G3, G4 e as duas tabelas)
+    alfa = st.radio("Nível de significância (α) das seções 4 e 5", config.ALPHAS,
+                    format_func=_num, horizontal=True)
+    st.markdown(TEXTOS["alfa_001"])
+    st.plotly_chart(fig_g3(s02["grade"], alpha=alfa), width="stretch", theme=None)
     st.markdown(f"**Status do erro tipo I** (H₀ verdadeira, {config.N_REPS:,} repetições por "
                 f"situação; o status vem do IC de 95% da taxa)".replace(",", "."))
-    st.dataframe(_tabela_tipo1(s02["tipo1"], rotulos), width="stretch", hide_index=True)
+    st.dataframe(_tabela_tipo1(_do_alfa(s02["tipo1"], alfa), rotulos), width="stretch",
+                 hide_index=True)
 st.markdown(TEXTOS["erro_tipo_1"])
+with st.container(border=True):
+    st.markdown(f"⚖️ **Erro tipo I × erro tipo II neste cenário.** {TEXTOS['erros_tipo']}")
 
 # ---------------------------------------------------------------- 5. Poder
 st.header("5. Poder")
 if s02 is None:
     _sem_resultados()
 else:
-    st.plotly_chart(fig_g4(s02["grade"]), width="stretch", theme=None)
+    st.plotly_chart(fig_g4(s02["grade"], alpha=alfa), width="stretch", theme=None)
     st.markdown("**Teste com mais poder** em cada situação e tamanho de efeito "
                 "(vantagem = diferença nas taxas de rejeição)")
-    st.dataframe(_tabela_poder(s02["poder"], rotulos), width="stretch", hide_index=True)
+    st.dataframe(_tabela_poder(_do_alfa(s02["poder"], alfa), rotulos), width="stretch",
+                 hide_index=True)
 st.markdown(TEXTOS["poder"])
 st.markdown(f"**Por que cada violação pesa mais para um teste.** {TEXTOS['violacoes']}")
 
@@ -273,6 +289,8 @@ with st.container(border=True):
     st.markdown(TEXTOS["conclusao_recomendacao"])
 st.subheader("Quando a recomendação muda")
 st.markdown(TEXTOS["conclusao_quando_muda"])
+st.subheader("Limitações do estudo")
+st.markdown(TEXTOS["limitacoes"])
 
 st.divider()
 st.caption(f"Resultados reproduzíveis com `python -m lab04.run_all` (semente fixa {config.SEED}).")
