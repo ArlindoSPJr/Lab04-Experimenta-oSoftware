@@ -1,4 +1,4 @@
-"""Textos das seções do dashboard (S01: seções 1 a 3; S02: seções 4 e 5).
+"""Textos das seções do dashboard (S01: seções 1 a 3; S02: seções 4 e 5; Final: 6 e 7).
 
 Os textos que acompanham um gráfico têm de 2 a 4 frases (exigência do enunciado).
 Os números vêm de `describe_real` e `fit_lognormal` sobre `data/real_prs.csv`.
@@ -90,5 +90,57 @@ TEXTOS: dict[str, str] = {
         "longa que o Welch cai para 0,5% de erro tipo I e quase nenhum poder, enquanto o Mann-Whitney "
         "segura os 5% porque compara só a ordem dos valores, embora também perca poder, já que os "
         "dois grupos passam a se sobrepor mais."
+    ),
+    # Seção 6 — Dados reais; números de tabela_dados_reais(load_real_data()) e describe_real
+    "dados_reais": (
+        "Nos 60 PRs reais os dois testes concordam e rejeitam H₀ a 5%: o t de Welch deu t = 3,07 "
+        "(p = 0,0046) e o Mann-Whitney deu U = 587 (p = 0,044), os dois apontando que os PRs de "
+        "novatos demoram mais para ser mergeados. O efeito é relevante na prática: a mediana dos "
+        "novatos (96,7 h, cerca de 4 dias) é quatro vezes a do core (24,0 h), o d de Cohen é 0,79 e o "
+        "r rank-biserial de 0,30 indica que, em 65% dos pares novato × core, o PR do novato demorou "
+        "mais. O Welch ter rejeitado com p menor que o do Mann-Whitney, depois de ser tão "
+        "conservador na simulação, tem explicação: a diferença real é maior que o maior efeito "
+        "simulado (mediana do core cerca de 75% menor, contra no máximo 50%) e o core real é bem "
+        "menos disperso que o simulado (σ do log de 1,32, contra os 2,73 usados para os dois "
+        "grupos), o que encolhe o erro padrão do t. Além disso, a cauda longa dos novatos (até "
+        "4.447 h) puxa a média deles para 664 h, contra 60,9 h do core, ou seja, aqui os valores "
+        "extremos jogam a favor do Welch porque estão do lado do efeito, mas um único PR extremo no "
+        "outro grupo poderia ter escondido a diferença, como no exemplo simulado da seção 3."
+    ),
+    # Seção 7 — Conclusão; números de results/tipo1_status.csv, simulacao.csv e poder_vencedor.csv
+    "conclusao_palpite": (
+        "Acertamos o principal: o Mann-Whitney venceu, com mais poder em todos os 4 cenários e em "
+        "todos os tamanhos de efeito (de 3,2 a 12,9 pontos percentuais a mais que o Welch), e manteve "
+        "o erro tipo I entre 4,4% e 4,9% (Q1 e Q3). Também acertamos que o Welch seria conservador, "
+        "mas subestimamos o quanto: ele ficou abaixo de 5% em todos os cenários, e não só nos mais "
+        "assimétricos, com erro tipo I entre 0,5% e 1,3% e poder de no máximo 2,4% mesmo com a "
+        "mediana do core 50% menor (Q2). O que não previmos foi que o Mann-Whitney também teria "
+        "pouco poder, no máximo cerca de 15% (efeito 0,5), porque com σ = 2,73 e n = 30 os grupos "
+        "simulados se sobrepõem muito, e que nos dados reais o Welch rejeitaria H₀ com p menor que "
+        "o do Mann-Whitney (0,0046 × 0,044). Isso mostra que a simulação, ao dar aos dois grupos a "
+        "mesma dispersão dos novatos, foi mais dura com o Welch do que os dados reais, em que o core "
+        "é bem menos disperso."
+    ),
+    "conclusao_recomendacao": (
+        "Para tempos de merge de PRs, recomendamos o Mann-Whitney como teste principal. Na simulação "
+        "calibrada com os dados reais, ele segurou o erro tipo I perto de 5% e teve mais poder que o "
+        "t de Welch em todos os cenários, inclusive com outliers e assimetria forte, enquanto o Welch "
+        "ficou conservador (0,5% a 1,3%) e quase nunca detectou reduções de até 50% na mediana. Ele "
+        "também responde à pergunta mais natural para esse tipo de dado, se um PR de novato tende a "
+        "demorar mais que um do core, sem depender de uma média dominada por poucos PRs de milhares "
+        "de horas. O Welch pode entrar como complemento, mas, sozinho, um resultado não significativo "
+        "dele não quer dizer que o efeito não existe."
+    ),
+    "conclusao_quando_muda": (
+        "A recomendação mudaria se os dados fossem quase normais, por exemplo ao analisar o log do "
+        "tempo de merge, caso em que o t de Welch fica perto dos 5% e tem poder parecido com o do "
+        "Mann-Whitney. Também mudaria com amostras muito maiores que 30 por grupo, em que a média "
+        "amostral fica mais perto da normal e o Welch deixa de ser tão conservador (na simulação ele "
+        "já foi menos conservador com n = 30, 1,3%, do que com n = 10, 0,7%), e quando a pergunta for "
+        "sobre a média, como o total de horas de espera de cada grupo, que o Mann-Whitney não "
+        "responde porque compara postos e não médias. Por fim, se os dois grupos tiverem formas muito "
+        "diferentes, como aqui, em que o core é bem menos disperso, o Mann-Whitney deixa de comparar "
+        "só as medianas e passa a dizer se um grupo tende a ter valores maiores que o outro, e a "
+        "conclusão deve ser lida nesse sentido."
     ),
 }
