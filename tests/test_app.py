@@ -52,3 +52,12 @@ def test_s02_sem_simulacao_mostra_aviso_nas_secoes_4_e_5(tmp_path, monkeypatch):
     at = AppTest.from_file(APP, default_timeout=30).run()
     assert not at.exception
     assert len(at.get("plotly_chart")) == 0
+
+
+def test_dashboard_publicado_com_link_no_topo_e_no_readme():
+    from lab04.config import DASHBOARD_URL
+    assert DASHBOARD_URL.startswith("https://") and DASHBOARD_URL.endswith(".streamlit.app/")
+    at = _rodar()
+    topo = " ".join(m.value for m in at.markdown[:3])
+    assert DASHBOARD_URL in topo
+    assert DASHBOARD_URL in (ROOT / "README.md").read_text(encoding="utf-8")
