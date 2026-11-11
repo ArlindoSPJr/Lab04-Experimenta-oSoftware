@@ -88,8 +88,9 @@ def _fig_g2(r: TestResult, alpha: float, x: np.ndarray, densidade: np.ndarray, c
     apply_layout(fig, titulo, x_title, y_title)
     fig.update_xaxes(range=[float(x.min()), float(x.max())])
     fig.update_yaxes(range=[0, topo])
-    fig.update_layout(separators=",.", legend=dict(orientation="h", y=-0.22, x=0.5, xanchor="center"),
-                      margin=dict(t=95, b=40))
+    fig.update_layout(separators=",.", legend=dict(orientation="h", y=-0.24, x=0.5, xanchor="center",
+                                  entrywidth=190, entrywidthmode="pixels"),
+                      margin=dict(t=100, b=40, l=80), height=540)
     return fig
 
 
@@ -99,7 +100,7 @@ def fig_g2_welch(r: TestResult, alpha: float = ALPHA) -> go.Figure:
     limite = max(4.0, abs(r.statistic) + 1.0)
     x = np.linspace(-limite, limite, N_PONTOS)
     return _fig_g2(r, alpha, x, stats.t.pdf(x, r.df), 0.0, critico, "t",
-                   "Estatística t (adimensional)", "Densidade de probabilidade (por unidade de t)", 2)
+                   "Estatística t (adimensional)", "Densidade (por unidade de t)", 2)
 
 
 def fig_g2_mw(r: TestResult, alpha: float = ALPHA) -> go.Figure:
@@ -110,4 +111,4 @@ def fig_g2_mw(r: TestResult, alpha: float = ALPHA) -> go.Figure:
     meia_largura = max(4 * desvio, abs(r.statistic - media) + desvio)
     x = np.linspace(max(0.0, media - meia_largura), min(r.n_a * r.n_b, media + meia_largura), N_PONTOS)
     return _fig_g2(r, alpha, x, stats.norm.pdf(x, media, desvio), media, critico, "U",
-                   "Estatística U (contagem de pares)", "Densidade de probabilidade (por unidade de U)", 1)
+                   "Estatística U (contagem de pares)", "Densidade (por unidade de U)", 1)
