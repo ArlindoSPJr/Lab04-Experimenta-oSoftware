@@ -18,7 +18,8 @@ def test_assimetria_deixa_welch_conservador():
     assert r["welch"] < 0.045
 
 def test_poder_cresce_com_efeito():
-    g = run_grid(np.random.default_rng(42), [S], effects=(0.0, 0.25, 0.5), n_reps=2000)
+    # #48: um só alfa, senão o groupby por teste mistura as taxas de 0,05 e 0,01
+    g = run_grid(np.random.default_rng(42), [S], effects=(0.0, 0.25, 0.5), n_reps=2000, alphas=(0.05,))
     for t, sub in g.groupby("test"):
         rates = sub.sort_values("effect").rejection_rate.to_numpy()
         assert np.all(np.diff(rates) > 0) and rates[-1] > rates[0] + 0.3
