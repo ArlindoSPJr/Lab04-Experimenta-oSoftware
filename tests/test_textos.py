@@ -57,3 +57,33 @@ def test_recomendacao_cita_os_dois_testes():
     texto = TEXTOS["conclusao_recomendacao"]
     assert "Welch" in texto
     assert "Mann-Whitney" in texto
+
+
+CHAVES_PERGUNTAS = {"bicaudal", "p_valor_nao_e", "erros_tipo", "limitacoes"}
+
+
+def test_chaves_perguntas_presentes_e_nao_vazias():
+    assert CHAVES_PERGUNTAS <= set(TEXTOS)
+    for k in CHAVES_PERGUNTAS:
+        assert TEXTOS[k].strip(), k
+
+
+def test_textos_perguntas_tem_2_a_4_frases():
+    for k in ("bicaudal", "p_valor_nao_e", "erros_tipo"):
+        assert 2 <= _frases(TEXTOS[k]) <= 4, k
+
+
+def test_erros_tipo_fala_dos_dois_erros_e_do_welch():
+    texto = TEXTOS["erros_tipo"]
+    assert "tipo I" in texto and "tipo II" in texto
+    assert "Welch" in texto
+
+
+def test_limitacoes_tem_as_6_com_a_principal_em_negrito():
+    texto = TEXTOS["limitacoes"]
+    itens = [linha for linha in texto.splitlines() if linha.lstrip().startswith("- ")]
+    assert len(itens) == 6
+    assert "**" in itens[0] and "sobrevivência" in itens[0]
+    for termo in ("sobrevivência", "Associação atual", "Novato", "Janelas de tempo",
+                  "rascunho", "Core team pequeno"):
+        assert termo in texto, termo
