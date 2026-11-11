@@ -20,15 +20,28 @@ ALTERNATIVE: str = "two-sided"
 
 TEST_NAMES: tuple[str, ...] = ("welch", "mann_whitney")
 LABELS: dict[str, str] = {"welch": "t de Welch", "mann_whitney": "Mann-Whitney"}
-# Mesma cor para cada teste em todos os gráficos (exigência do enunciado)
-COLORS: dict[str, str] = {"welch": "#1f77b4", "mann_whitney": "#ff7f0e"}
+# Mesma cor para cada teste em todos os gráficos (exigência do enunciado).
+# Paleta validada sobre branco: contraste >= 3:1 e separação para daltonismo
+# (protan/deutan/tritan) entre as quatro cores abaixo, comparadas duas a duas.
+COLORS: dict[str, str] = {"welch": "#2a78d6", "mann_whitney": "#d55e00"}
 
 # Convenção: a = novato, b = core
 GROUPS: tuple[str, ...] = ("novato", "core")
 
 # Cores de dados real × simulado no G1 (diferentes das cores dos testes)
-DATA_COLORS: dict[str, str] = {"real": "#2ca02c", "simulado": "#7f7f7f"}
+DATA_COLORS: dict[str, str] = {"real": "#a23b8f", "simulado": "#20a080"}
 GROUP_LABELS: dict[str, str] = {"novato": "Novatos", "core": "Core team"}
+
+# Cores de apoio dos gráficos (fundo, texto, grade, linhas de referência).
+# Fundo branco: o dashboard é apresentado em projetor.
+CHART_COLORS: dict[str, str] = {
+    "fundo": "#ffffff",
+    "texto": "#1f1f1f",
+    "texto_secundario": "#52514e",  # rótulos de apoio e linhas de referência (7,9:1 sobre branco)
+    "grade": "#e5e4df",
+    "eixo": "#9a998f",
+}
+FONT_SIZE: int = 15  # px; rótulos de eixo legíveis em projetor (mínimo 14)
 
 ROOT: Path = Path(__file__).resolve().parent.parent
 DATA_DIR: Path = ROOT / "data"
