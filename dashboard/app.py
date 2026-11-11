@@ -73,6 +73,11 @@ def _resultados_s02(pasta: str) -> dict | None:
     }
 
 
+def _do_alfa(df: pd.DataFrame, alfa: float) -> pd.DataFrame:
+    """Linhas do α escolhido (#48); resultados sem a coluna `alpha` valem para qualquer α."""
+    return df[(df["alpha"] - alfa).abs() < 1e-9] if "alpha" in df else df
+
+
 def _tabela_tipo1(tipo1: pd.DataFrame, rotulos: dict) -> pd.DataFrame:
     """Uma linha por situação, com a taxa e o status de cada teste."""
     linhas = []
@@ -232,13 +237,19 @@ s02 = _resultados_s02(str(RESULTS_DIR))
 rotulos = {} if s02 is None else dict(zip(s02["grade"]["scenario"], s02["grade"]["scenario_label"]))
 
 st.header("4. Erro tipo I")
+alfa = config.ALPHA
 if s02 is None:
     _sem_resultados()
 else:
-    st.plotly_chart(fig_g3(s02["grade"]), width="stretch", theme=None)
+    # #48: o α escolhido vale para as seções 4 e 5 (G3, G4 e as duas tabelas)
+    alfa = st.radio("Nível de significância (α) das seções 4 e 5", config.ALPHAS,
+                    format_func=_num, horizontal=True)
+    st.markdown(TEXTOS["alfa_001"])
+    st.plotly_chart(fig_g3(s02["grade"], alpha=alfa), width="stretch", theme=None)
     st.markdown(f"**Status do erro tipo I** (H₀ verdadeira, {config.N_REPS:,} repetições por "
                 f"situação; o status vem do IC de 95% da taxa)".replace(",", "."))
-    st.dataframe(_tabela_tipo1(s02["tipo1"], rotulos), width="stretch", hide_index=True)
+    st.dataframe(_tabela_tipo1(_do_alfa(s02["tipo1"], alfa), rotulos), width="stretch",
+                 hide_index=True)
 st.markdown(TEXTOS["erro_tipo_1"])
 
 # ---------------------------------------------------------------- 5. Poder
@@ -246,10 +257,11 @@ st.header("5. Poder")
 if s02 is None:
     _sem_resultados()
 else:
-    st.plotly_chart(fig_g4(s02["grade"]), width="stretch", theme=None)
+    st.plotly_chart(fig_g4(s02["grade"], alpha=alfa), width="stretch", theme=None)
     st.markdown("**Teste com mais poder** em cada situação e tamanho de efeito "
                 "(vantagem = diferença nas taxas de rejeição)")
-    st.dataframe(_tabela_poder(s02["poder"], rotulos), width="stretch", hide_index=True)
+    st.dataframe(_tabela_poder(_do_alfa(s02["poder"], alfa), rotulos), width="stretch",
+                 hide_index=True)
 st.markdown(TEXTOS["poder"])
 st.markdown(f"**Por que cada violação pesa mais para um teste.** {TEXTOS['violacoes']}")
 
