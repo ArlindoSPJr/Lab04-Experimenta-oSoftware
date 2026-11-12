@@ -67,3 +67,47 @@ def test_g4_filtra_pelo_alfa_e_muda_a_linha():
     assert list(f5.data[0].y) == pytest.approx([5.0, 25.0]) and list(f1.data[0].y) == pytest.approx([1.0, 5.0])
     assert _linhas_y(f5) == [5.0] and _linhas_y(f1) == [1.0]
     assert any("α = 1%" in a.text for a in f1.layout.annotations)
+
+
+# --- #59: G4 sem textos sobrepostos ---
+
+G4_CENARIOS = pd.DataFrame([{"scenario": s, "scenario_label": s, "n": 30, "effect": e, "test": t,
+                             "rejection_rate": 0.05 + e, "ci_low": 0.04 + e, "ci_high": 0.06 + e,
+                             "n_reps": 100}
+                            for s in ("base", "pequena", "outliers", "assimetria")
+                            for e in (0.0, 0.2) for t in ("welch", "mann_whitney")])
+
+
+def _linha(f, eixo_y):
+    """Faixa vertical (em px) da área de plotagem do eixo `eixo_y`."""
+    m = f.layout.margin
+    area = f.layout.height - m.t - m.b
+    d0, d1 = f.layout[eixo_y].domain
+    return m.b + d0 * area, m.b + d1 * area
+
+
+def test_g4_altura_cresce_com_as_linhas_e_titulo_y_cabe_na_linha():
+    f = fig_g4(G4_CENARIOS)
+    assert f.layout.height is not None and f.layout.margin.t is not None and f.layout.margin.b is not None
+    base, topo = _linha(f, "yaxis")
+    # "Poder (% de rejeições)" tem 22 caracteres; cada um ocupa ~0,6 da fonte em px.
+    from lab04.config import FONT_SIZE
+    assert topo - base >= 22 * 0.6 * (FONT_SIZE + 1) + 20
+    assert fig_g4(G4_CENARIOS).layout.height > fig_g4(G).layout.height
+
+
+def test_g4_espaco_entre_linhas_cabe_ticks_titulo_x_e_titulo_do_subplot():
+    f = fig_g4(G4_CENARIOS)
+    from lab04.config import FONT_SIZE
+    baixo_cima, _ = _linha(f, "yaxis")      # linha de cima (subplot 1)
+    _, topo_baixo = _linha(f, "yaxis3")     # linha de baixo (subplot 3)
+    # rótulos dos ticks + título do eixo x + título do subplot de baixo, com folga.
+    assert baixo_cima - topo_baixo >= 3 * (FONT_SIZE + 1) * 1.5 + 20
+
+
+def test_g4_rotulo_do_alfa_fora_da_area_das_curvas():
+    f = fig_g4(G4_CENARIOS)
+    rotulos = [a for a in f.layout.annotations if a.text and "α =" in a.text]
+    assert len(rotulos) == 1
+    a = rotulos[0]
+    assert a.xref == "paper" and a.x > 1  # à direita dos subplots, junto da legenda
