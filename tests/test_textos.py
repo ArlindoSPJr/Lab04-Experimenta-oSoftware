@@ -92,3 +92,30 @@ def test_limitacoes_tem_as_6_com_a_principal_em_negrito():
     for termo in ("sobrevivência", "Associação atual", "Novato", "Janelas de tempo",
                   "rascunho", "Core team pequeno"):
         assert termo in texto, termo
+
+
+# #57: dashboard projetado para a sala; texto curto, o detalhe fica em docs/apresentacao.md
+MAX_CARACTERES = 300
+MAX_CARACTERES_ITEM = 90
+
+
+def test_textos_curtos_para_projecao():
+    for k, texto in TEXTOS.items():
+        if k == "limitacoes":
+            continue
+        assert len(texto) <= MAX_CARACTERES, (k, len(texto))
+
+
+def test_limitacoes_com_itens_curtos():
+    itens = [linha for linha in TEXTOS["limitacoes"].splitlines() if linha.lstrip().startswith("- ")]
+    for item in itens:
+        assert len(item) <= MAX_CARACTERES_ITEM, (item, len(item))
+
+
+def test_explicacoes_retiradas_estao_no_roteiro():
+    from lab04.config import ROOT
+    roteiro = (ROOT / "docs" / "apresentacao.md").read_text(encoding="utf-8")
+    assert "## Explicações completas" in roteiro
+    for trecho in ("22 mil horas", "Q3 + 1,5·IQR", "1.070 h", "σ do log de 1,32",
+                   "75% menor", "100 pares", "0,78% e 0,87%"):
+        assert trecho in roteiro, trecho

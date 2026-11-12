@@ -122,11 +122,13 @@ def test_seletor_de_alfa_muda_g3_g4_e_tabelas():
     seletor = at.radio[0]
     assert list(seletor.options) == ["0,05", "0,01"] and seletor.value == 0.05
     assert _linhas_de_referencia(at) == [[5.0], [5.0]]
-    assert TEXTOS["alfa_001"] in " ".join(m.value for m in at.markdown)
+    # #57: o texto do α = 0,01 só aparece quando o seletor está em 0,01
+    assert TEXTOS["alfa_001"] not in " ".join(m.value for m in at.markdown)
     tabelas_005 = [d.value.to_string() for d in at.dataframe]
     at = seletor.set_value(0.01).run()
     assert not at.exception
     assert _linhas_de_referencia(at) == [[1.0], [1.0]]
+    assert TEXTOS["alfa_001"] in " ".join(m.value for m in at.markdown)
     assert [d.value.to_string() for d in at.dataframe] != tabelas_005
 
 def _por_secao(at):
@@ -163,3 +165,9 @@ def test_final_respostas_p2_p7_p8_p15_na_secao_certa():
 def test_final_secao_7_tem_bloco_de_limitacoes():
     at = _rodar()
     assert "Limitações do estudo" in [s.value for s in at.subheader]
+
+
+def test_fonte_ampliada_para_projecao():
+    """#57: a página aumenta a fonte do texto para ser lida do fundo da sala."""
+    at = _rodar()
+    assert any("font-size" in m.value for m in at.markdown)
