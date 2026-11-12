@@ -198,3 +198,48 @@ TEXTOS: dict[str, str] = {
         "individual delas pesa nos tempos."
     ),
 }
+
+
+# #50: as 15 perguntas da apresentação (Enunciado.pdf, seção 5) e o bloco do dashboard que
+# responde a cada uma. `ancora` é o id do cabeçalho (`secao-N` ou subheader) ou do `<div id>`
+# posto logo antes do bloco; `curto` é o rótulo do link na sidebar. Reaproveitado pelo roteiro.
+PERGUNTAS: list[dict] = [
+    {"numero": 1, "secao": 1, "ancora": "secao-1", "curto": "Cenário, H₀ e H₁",
+     "texto": "Qual é o cenário de vocês e o que H₀ e H₁ afirmam, em palavras simples?"},
+    {"numero": 2, "secao": 1, "ancora": "p2", "curto": "Unicaudal ou bicaudal",
+     "texto": "O teste de vocês é unicaudal ou bicaudal? Por quê?"},
+    {"numero": 3, "secao": 2, "ancora": "secao-2", "curto": "Coleta e forma dos dados",
+     "texto": "Como os dados reais foram coletados, e o que eles mostraram sobre a forma da "
+              "distribuição?"},
+    {"numero": 4, "secao": 2, "ancora": "p4", "curto": "Parâmetros da simulação",
+     "texto": "Como os dados reais ajudaram a escolher os parâmetros da simulação?"},
+    {"numero": 5, "secao": 3, "ancora": "secao-3", "curto": "O que cada teste compara",
+     "texto": "O que cada um dos dois testes compara de fato (médias, postos, proporções...)?"},
+    {"numero": 6, "secao": 3, "ancora": "p6", "curto": "G2: estatística sob H₀",
+     "texto": "No G2: o que é a distribuição da estatística sob H₀, e por que a região de "
+              "rejeição fica onde fica?"},
+    {"numero": 7, "secao": 3, "ancora": "p7", "curto": "O p-valor do exemplo",
+     "texto": "O que significa o p-valor do exemplo mostrado no G2? E o que ele não significa?"},
+    {"numero": 8, "secao": 4, "ancora": "p8", "curto": "Erro tipo I × II",
+     "texto": "No cenário de vocês, o que seria um erro tipo I e um erro tipo II? Qual dos dois "
+              "seria mais grave?"},
+    {"numero": 9, "secao": 4, "ancora": "secao-4", "curto": "G3: liberal ou conservador",
+     "texto": "No G3, algum teste se afastou de 5%? Ele ficou liberal ou conservador, e por quê?"},
+    {"numero": 10, "secao": 5, "ancora": "secao-5", "curto": "G4: qual tem mais poder",
+     "texto": "No G4, qual teste tem mais poder? A diferença entre eles muda conforme o tamanho "
+              "do efeito?"},
+    {"numero": 11, "secao": 5, "ancora": "p11", "curto": "Violações de pressuposto",
+     "texto": "Que violação de pressuposto vocês simularam, e por que ela afeta mais um teste do "
+              "que o outro?"},
+    {"numero": 12, "secao": 4, "ancora": "p12", "curto": "α = 0,01 no G3 e no G4",
+     "texto": "Se vocês usassem α = 0,01 em vez de 0,05, o que mudaria no G3 e no G4?"},
+    {"numero": 13, "secao": 7, "ancora": "palpite-resultado", "curto": "Palpite × resultado",
+     "texto": "A simulação confirmou o que o grupo esperava antes de simular? Se não, o que "
+              "explica a diferença?"},
+    {"numero": 14, "secao": 6, "ancora": "secao-6", "curto": "Dados reais e efeito prático",
+     "texto": "Nos dados reais, os dois testes chegaram à mesma conclusão? O tamanho do efeito "
+              "tem importância prática?"},
+    {"numero": 15, "secao": 7, "ancora": "recomendacao", "curto": "Recomendação e limitações",
+     "texto": "Qual teste vocês recomendam para o cenário, em que situação mudariam a "
+              "recomendação, e qual é a principal limitação do estudo?"},
+]
