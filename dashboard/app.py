@@ -119,7 +119,6 @@ def _tabela_dados_reais(reais: pd.DataFrame) -> pd.DataFrame:
             "Estatística": estatistica(r),
             "p-valor": _p(r.p_valor),
             "Tamanho de efeito": f"{r.efeito_nome} = {_num(r.efeito)}",
-            f"Decisão (α = {_num(config.ALPHA)})": "rejeita H₀" if r.rejeita_h0 else "não rejeita H₀",
             "Conclusão": r.conclusao,
         }
         for r in reais.itertuples()
@@ -159,7 +158,6 @@ def _taxa_base(grade: pd.DataFrame, alfa: float, efeito: float) -> dict[str, flo
 def _indice() -> None:
     """Sidebar com as 15 perguntas da apresentação, cada uma com link para o bloco que responde."""
     st.sidebar.title("15 perguntas da apresentação")
-    st.sidebar.caption("Clique para ir ao bloco do dashboard que responde à pergunta.")
     for p in PERGUNTAS:
         st.sidebar.markdown(f"[P{p['numero']} · {p['curto']} — seção {p['secao']}](#{p['ancora']})",
                             help=p["texto"])
@@ -176,6 +174,20 @@ st.markdown(
     f"**GitHub Projects:** [{config.PROJECT_URL}]({config.PROJECT_URL})"
 )
 st.caption("PUC Minas · Laboratório de Experimentação de Software · Lab04 · par P1")
+# #57: a página é projetada para a sala; texto maior para ser lido do fundo
+st.markdown(
+    "<style>"
+    "[data-testid='stMain'] [data-testid='stMarkdownContainer'] p,"
+    "[data-testid='stMain'] [data-testid='stMarkdownContainer'] li {font-size: 1.25rem;}"
+    "[data-testid='stMain'] [data-testid='stCaptionContainer'] p {font-size: 0.95rem;}"
+    # o seletor acima também pegaria os números das métricas, que precisam continuar grandes
+    "[data-testid='stMain'] [data-testid='stMetricValue'] [data-testid='stMarkdownContainer'] p"
+    " {font-size: 2.5rem;}"
+    "[data-testid='stMain'] [data-testid='stMetricLabel'] [data-testid='stMarkdownContainer'] p"
+    " {font-size: 1.05rem;}"
+    "</style>",
+    unsafe_allow_html=True,
+)
 _indice()
 
 real = _dados_reais()
@@ -195,12 +207,12 @@ with col_h0.container(border=True):
 with col_h1.container(border=True):
     st.markdown(TEXTOS["h1"])
 _ancora("p2")
-st.markdown(f"**Por que bicaudal.** {TEXTOS['bicaudal']}")
+st.markdown(f"**Bicaudal.** {TEXTOS['bicaudal']}")
 
 n_por_grupo = real["group"].value_counts()
 col_fonte, col_n = st.columns([3, 2])
 with col_fonte:
-    st.markdown(f"**De onde vêm os dados.** {TEXTOS['fonte']}")
+    st.markdown(f"**Dados.** {TEXTOS['fonte']}")
 with col_n:
     m1, m2, m3 = st.columns(3)
     m1.metric("PRs de novatos", int(n_por_grupo.get("novato", 0)))
@@ -220,7 +232,7 @@ st.markdown(TEXTOS["dados"])
 
 col_desc, col_par = st.columns([3, 2])
 with col_desc:
-    st.markdown("**Dados reais por grupo** (tempo até o merge, em horas)")
+    st.markdown("**Dados reais por grupo** (horas)")
     desc = describe_real(real)
     tabela = pd.DataFrame({
         "n": desc["n"].astype(int),
@@ -242,7 +254,6 @@ with col_par:
         p1.metric("μ (média do log)", _num(par["mu"]))
         p2.metric("σ (desvio do log)", _num(par["sigma"]))
         p3.metric("Mediana e^μ", f"{_num(math.exp(par['mu']), 0)} h")
-        st.caption(f"Ajustados em `{par['fonte']}` · n = {par['n']} por grupo em cada simulação.")
 
 # ---------------------------------------------------------------- 3. Como os testes funcionam
 _secao(3, "Como os testes funcionam")
@@ -256,8 +267,7 @@ else:
     col_w.plotly_chart(fig_g2_welch(testes["welch"]), width="stretch", theme=None)
     col_m.plotly_chart(fig_g2_mw(testes["mann_whitney"]), width="stretch", theme=None)
 
-    st.markdown(f"**Exemplo:** um dataset simulado com efeito {_num(res['efeito'], 1)} "
-                f"(mediana do core {res['efeito']:.0%} menor), n = {testes['welch'].n_a} por grupo")
+    st.markdown(f"**Exemplo** (efeito {_num(res['efeito'], 1)}, n = {testes['welch'].n_a} por grupo)")
     exemplo = pd.DataFrame([
         {
             "Teste": config.LABELS[r.name],
@@ -272,7 +282,7 @@ else:
     st.dataframe(exemplo, width="stretch", hide_index=True)
 _ancora("p7")
 st.markdown(TEXTOS["exemplo"])
-st.markdown(f"**O que o p-valor não é.** {TEXTOS['p_valor_nao_e']}")
+st.markdown(f"**p-valor.** {TEXTOS['p_valor_nao_e']}")
 
 # ---------------------------------------------------------------- 4. Erro tipo I
 s02 = _resultados_s02(str(RESULTS_DIR))
@@ -293,16 +303,16 @@ else:
         col.metric(f"Erro tipo I · {config.LABELS[teste]}", _pct(tipo1_base[teste]), border=True,
                    help=f"Cenário base (n = {config.N_PER_GROUP}), H₀ verdadeira, α = {_num(alfa)}: "
                         f"o ideal é ficar perto de {_pct(alfa)}.")
-    st.markdown(TEXTOS["alfa_001"])
+    if alfa != config.ALPHA:
+        st.markdown(TEXTOS["alfa_001"])
     st.plotly_chart(fig_g3(s02["grade"], alpha=alfa), width="stretch", theme=None)
-    st.markdown(f"**Status do erro tipo I** (H₀ verdadeira, {config.N_REPS:,} repetições por "
-                f"situação; o status vem do IC de 95% da taxa)".replace(",", "."))
+    st.markdown(f"**Status do erro tipo I** ({config.N_REPS:,} repetições, IC de 95%)".replace(",", "."))
     st.dataframe(_tabela_tipo1(_do_alfa(s02["tipo1"], alfa), rotulos), width="stretch",
                  hide_index=True)
 st.markdown(TEXTOS["erro_tipo_1"])
 _ancora("p8")
 with st.container(border=True):
-    st.markdown(f"⚖️ **Erro tipo I × erro tipo II neste cenário.** {TEXTOS['erros_tipo']}")
+    st.markdown(f"⚖️ **Erro tipo I × tipo II.** {TEXTOS['erros_tipo']}")
 
 # ---------------------------------------------------------------- 5. Poder
 _secao(5, "Poder")
@@ -318,13 +328,12 @@ else:
                    help=f"Cenário base (n = {config.N_PER_GROUP}), mediana do core "
                         f"{efeito_max:.0%} menor, α = {_num(alfa)}.")
     st.plotly_chart(fig_g4(s02["grade"], alpha=alfa), width="stretch", theme=None)
-    st.markdown("**Teste com mais poder** em cada situação e tamanho de efeito "
-                "(vantagem = diferença nas taxas de rejeição)")
+    st.markdown("**Teste com mais poder**")
     st.dataframe(_tabela_poder(_do_alfa(s02["poder"], alfa), rotulos), width="stretch",
                  hide_index=True)
 st.markdown(TEXTOS["poder"])
 _ancora("p11")
-st.markdown(f"**Por que cada violação pesa mais para um teste.** {TEXTOS['violacoes']}")
+st.markdown(f"**Violações simuladas**\n\n{TEXTOS['violacoes']}")
 
 # ---------------------------------------------------------------- 6. Dados reais
 _secao(6, "Dados reais")
@@ -332,8 +341,7 @@ reais = _resultados_reais(str(RESULTS_DIR))
 if reais is None:
     _sem_resultados()
 else:
-    st.markdown(f"**Os dois testes aplicados aos {len(real)} PRs reais** "
-                "(H₀ bilateral, novatos × core team)")
+    st.markdown(f"**Os dois testes nos {len(real)} PRs reais**")
     colunas = st.columns(2 * len(reais))
     for i, r in enumerate(reais.itertuples()):
         colunas[2 * i].metric(f"p-valor · {r.teste}", _p(r.p_valor), border=True,
