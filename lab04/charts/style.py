@@ -26,6 +26,7 @@ def apply_layout(fig: go.Figure, title: str, x_title: str, y_title: str) -> go.F
     (todas as cores vêm de `CHART_COLORS`).
     """
     fig.update_layout(
+        separators=",.",  # vírgula decimal e ponto de milhar (formato brasileiro)
         title=dict(text=title, font=dict(size=FONT_SIZE + 5, color=CHART_COLORS["texto"])),
         xaxis_title=x_title,
         yaxis_title=y_title,
