@@ -129,3 +129,8 @@ def test_tracos_dos_testes_usam_a_cor_do_teste(grafico):
         # G2 mostra um teste só: a curva sob H₀ (primeiro traço) usa a cor desse teste.
         assert fig.data[0].line.color == style.test_color(teste)
         assert config.LABELS[teste] in fig.layout.title.text
+
+
+def test_numeros_dos_eixos_em_formato_brasileiro(grafico):
+    nome, fig, _ = grafico
+    assert fig.layout.separators == ",.", f"{nome}: eixos sem vírgula decimal"

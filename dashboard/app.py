@@ -16,7 +16,7 @@ import streamlit as st
 # `streamlit run dashboard/app.py` põe só a pasta dashboard/ no sys.path; a raiz traz o `lab04`.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from dashboard.textos import TEXTOS  # noqa: E402
+from dashboard.textos import PERGUNTAS, TEXTOS  # noqa: E402
 from lab04 import config  # noqa: E402
 from lab04.charts.g1 import fig_g1  # noqa: E402
 from lab04.charts.g2 import fig_g2_mw, fig_g2_welch  # noqa: E402
@@ -130,6 +130,41 @@ def _sem_resultados() -> None:
     st.caption("Gráfico indisponível: faltam os arquivos de `results/`.")
 
 
+def _secao(numero: int, titulo: str) -> None:
+    """Cabeçalho da seção com âncora `secao-N` e a etiqueta das perguntas que ela responde (#50)."""
+    st.header(f"{numero}. {titulo}", anchor=f"secao-{numero}")
+    numeros = [str(p["numero"]) for p in PERGUNTAS if p["secao"] == numero]
+    if len(numeros) == 1:
+        st.caption(f"Responde à pergunta {numeros[0]}")
+    else:
+        st.caption(f"Responde às perguntas {', '.join(numeros[:-1])} e {numeros[-1]}")
+
+
+def _ancora(ident: str) -> None:
+    """Âncora invisível logo antes do bloco que responde a uma pergunta (links da sidebar)."""
+    st.markdown(f'<div id="{ident}"></div>', unsafe_allow_html=True)
+
+
+def _pct(taxa: float) -> str:
+    return f"{_num(taxa * 100)}%"
+
+
+def _taxa_base(grade: pd.DataFrame, alfa: float, efeito: float) -> dict[str, float]:
+    """Taxa de rejeição de cada teste no cenário base, no α e no efeito pedidos."""
+    sel = _do_alfa(grade[grade["scenario"] == "base"], alfa)
+    sel = sel[(sel["effect"] - efeito).abs() < 1e-9]
+    return dict(zip(sel["test"], sel["rejection_rate"]))
+
+
+def _indice() -> None:
+    """Sidebar com as 15 perguntas da apresentação, cada uma com link para o bloco que responde."""
+    st.sidebar.title("15 perguntas da apresentação")
+    st.sidebar.caption("Clique para ir ao bloco do dashboard que responde à pergunta.")
+    for p in PERGUNTAS:
+        st.sidebar.markdown(f"[P{p['numero']} · {p['curto']} — seção {p['secao']}](#{p['ancora']})",
+                            help=p["texto"])
+
+
 # ---------------------------------------------------------------- topo
 st.set_page_config(page_title="Lab04 — Welch × Mann-Whitney", page_icon="📊", layout="wide")
 
@@ -141,6 +176,7 @@ st.markdown(
     f"**GitHub Projects:** [{config.PROJECT_URL}]({config.PROJECT_URL})"
 )
 st.caption("PUC Minas · Laboratório de Experimentação de Software · Lab04 · par P1")
+_indice()
 
 real = _dados_reais()
 res = _resultados(str(RESULTS_DIR))
@@ -151,13 +187,14 @@ if res is None:
     )
 
 # ---------------------------------------------------------------- 1. Cenário
-st.header("1. Cenário")
+_secao(1, "Cenário")
 st.markdown(f"**Pergunta.** {TEXTOS['pergunta']}")
 col_h0, col_h1 = st.columns(2)
 with col_h0.container(border=True):
     st.markdown(TEXTOS["h0"])
 with col_h1.container(border=True):
     st.markdown(TEXTOS["h1"])
+_ancora("p2")
 st.markdown(f"**Por que bicaudal.** {TEXTOS['bicaudal']}")
 
 n_por_grupo = real["group"].value_counts()
@@ -173,11 +210,12 @@ with st.container(border=True):
     st.markdown(f"🎯 {TEXTOS['palpite']}")
 
 # ---------------------------------------------------------------- 2. Os dados
-st.header("2. Os dados")
+_secao(2, "Os dados")
 if res is None:
     _sem_resultados()
 else:
     st.plotly_chart(fig_g1(real, res["simulado"]), width="stretch", theme=None)
+_ancora("p4")
 st.markdown(TEXTOS["dados"])
 
 col_desc, col_par = st.columns([3, 2])
@@ -207,12 +245,13 @@ with col_par:
         st.caption(f"Ajustados em `{par['fonte']}` · n = {par['n']} por grupo em cada simulação.")
 
 # ---------------------------------------------------------------- 3. Como os testes funcionam
-st.header("3. Como os testes funcionam")
+_secao(3, "Como os testes funcionam")
 st.markdown(TEXTOS["como_funcionam"])
 if res is None:
     _sem_resultados()
 else:
     testes = res["testes"]
+    _ancora("p6")
     col_w, col_m = st.columns(2)
     col_w.plotly_chart(fig_g2_welch(testes["welch"]), width="stretch", theme=None)
     col_m.plotly_chart(fig_g2_mw(testes["mann_whitney"]), width="stretch", theme=None)
@@ -231,6 +270,7 @@ else:
         for r in testes.values()
     ])
     st.dataframe(exemplo, width="stretch", hide_index=True)
+_ancora("p7")
 st.markdown(TEXTOS["exemplo"])
 st.markdown(f"**O que o p-valor não é.** {TEXTOS['p_valor_nao_e']}")
 
@@ -238,14 +278,21 @@ st.markdown(f"**O que o p-valor não é.** {TEXTOS['p_valor_nao_e']}")
 s02 = _resultados_s02(str(RESULTS_DIR))
 rotulos = {} if s02 is None else dict(zip(s02["grade"]["scenario"], s02["grade"]["scenario_label"]))
 
-st.header("4. Erro tipo I")
+_secao(4, "Erro tipo I")
 alfa = config.ALPHA
 if s02 is None:
     _sem_resultados()
 else:
     # #48: o α escolhido vale para as seções 4 e 5 (G3, G4 e as duas tabelas)
+    _ancora("p12")
     alfa = st.radio("Nível de significância (α) das seções 4 e 5", config.ALPHAS,
                     format_func=_num, horizontal=True)
+    tipo1_base = _taxa_base(s02["grade"], alfa, 0.0)
+    colunas = st.columns(len(config.TEST_NAMES))
+    for col, teste in zip(colunas, config.TEST_NAMES):
+        col.metric(f"Erro tipo I · {config.LABELS[teste]}", _pct(tipo1_base[teste]), border=True,
+                   help=f"Cenário base (n = {config.N_PER_GROUP}), H₀ verdadeira, α = {_num(alfa)}: "
+                        f"o ideal é ficar perto de {_pct(alfa)}.")
     st.markdown(TEXTOS["alfa_001"])
     st.plotly_chart(fig_g3(s02["grade"], alpha=alfa), width="stretch", theme=None)
     st.markdown(f"**Status do erro tipo I** (H₀ verdadeira, {config.N_REPS:,} repetições por "
@@ -253,38 +300,53 @@ else:
     st.dataframe(_tabela_tipo1(_do_alfa(s02["tipo1"], alfa), rotulos), width="stretch",
                  hide_index=True)
 st.markdown(TEXTOS["erro_tipo_1"])
+_ancora("p8")
 with st.container(border=True):
     st.markdown(f"⚖️ **Erro tipo I × erro tipo II neste cenário.** {TEXTOS['erros_tipo']}")
 
 # ---------------------------------------------------------------- 5. Poder
-st.header("5. Poder")
+_secao(5, "Poder")
 if s02 is None:
     _sem_resultados()
 else:
+    efeito_max = max(config.EFFECTS)
+    poder_base = _taxa_base(s02["grade"], alfa, efeito_max)
+    colunas = st.columns(len(config.TEST_NAMES))
+    for col, teste in zip(colunas, config.TEST_NAMES):
+        col.metric(f"Poder com efeito de {efeito_max:.0%} · {config.LABELS[teste]}",
+                   _pct(poder_base[teste]), border=True,
+                   help=f"Cenário base (n = {config.N_PER_GROUP}), mediana do core "
+                        f"{efeito_max:.0%} menor, α = {_num(alfa)}.")
     st.plotly_chart(fig_g4(s02["grade"], alpha=alfa), width="stretch", theme=None)
     st.markdown("**Teste com mais poder** em cada situação e tamanho de efeito "
                 "(vantagem = diferença nas taxas de rejeição)")
     st.dataframe(_tabela_poder(_do_alfa(s02["poder"], alfa), rotulos), width="stretch",
                  hide_index=True)
 st.markdown(TEXTOS["poder"])
+_ancora("p11")
 st.markdown(f"**Por que cada violação pesa mais para um teste.** {TEXTOS['violacoes']}")
 
 # ---------------------------------------------------------------- 6. Dados reais
-st.header("6. Dados reais")
+_secao(6, "Dados reais")
 reais = _resultados_reais(str(RESULTS_DIR))
 if reais is None:
     _sem_resultados()
 else:
     st.markdown(f"**Os dois testes aplicados aos {len(real)} PRs reais** "
                 "(H₀ bilateral, novatos × core team)")
+    colunas = st.columns(2 * len(reais))
+    for i, r in enumerate(reais.itertuples()):
+        colunas[2 * i].metric(f"p-valor · {r.teste}", _p(r.p_valor), border=True,
+                              help=f"Teste bicaudal; α = {_num(config.ALPHA)}.")
+        colunas[2 * i + 1].metric(f"{r.efeito_nome} · {r.teste}", _num(r.efeito), border=True)
     st.dataframe(_tabela_dados_reais(reais), width="stretch", hide_index=True)
 st.markdown(TEXTOS["dados_reais"])
 
 # ---------------------------------------------------------------- 7. Conclusão
-st.header("7. Conclusão")
-st.subheader("Palpite × resultado")
+_secao(7, "Conclusão")
+st.subheader("Palpite × resultado", anchor="palpite-resultado")
 st.markdown(TEXTOS["conclusao_palpite"])
-st.subheader("Recomendação")
+st.subheader("Recomendação", anchor="recomendacao")
 with st.container(border=True):
     st.markdown(TEXTOS["conclusao_recomendacao"])
 st.subheader("Quando a recomendação muda")
